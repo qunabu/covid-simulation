@@ -3,7 +3,8 @@ import { randomDx, randomDy } from "./utils.js";
 const COLORS = {
   healthy: "#AAC6CA",
   sick: "#BB641D",
-  recovered: "#CB8AC0"
+  recovered: "#CB8AC0",
+  dead: "#333333"
 };
 
 const TICK_RECOVER = 100;
@@ -36,7 +37,7 @@ export default class Ball {
   }
 
   get dx() {
-    return this._dx;
+    return this._state === "dead" ? 0 : this._dx;
   }
 
   set dy(value) {
@@ -45,12 +46,15 @@ export default class Ball {
   }
 
   get dy() {
-    return this._dy;
+    return this._state === "dead" ? 0 : this._dy;
   }
 
   set state(value) {
-    this._state = value;
-    this.color = COLORS[value];
+    if (this._state !== value) {
+      this._state = value;
+      this.color = COLORS[value];
+      this.onChange();
+    }
   }
 
   get state() {
@@ -79,8 +83,13 @@ export default class Ball {
   tick() {
     if (this.state === "sick") {
       /** ADD dead state  */
-      if (this._tick++ > TICK_RECOVER && Math.random() > 0.5) {
-        this.state = "recovered";
+      if (this._tick++ > TICK_RECOVER) {
+        const rnd = Math.random();
+        if (rnd > 0.5) {
+          this.state = "recovered";
+        } else {
+          this.state = "dead";
+        }
       }
     }
   }
@@ -109,6 +118,10 @@ export default class Ball {
     this.ctx.closePath();
 
     this.tick();
+  }
+
+  onChange() {
+    console.log("change interanal");
   }
 
   speed() {

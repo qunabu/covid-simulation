@@ -1,6 +1,8 @@
 import { randomX, randomY, distance } from "./utils.js";
 
-import Ball from "./person.js";
+import Person from "./person.js";
+
+import ConfigGui from "./config.js";
 
 const CONFIG = {
   radius: 3,
@@ -11,15 +13,33 @@ const CONFIG = {
 
 const main = (wrapper = document.body, config = CONFIG) => {
   let canvas = document.createElement("canvas");
-  canvas.setAttribute("width", config.width);
-  canvas.setAttribute("height", config.height);
+
   wrapper.appendChild(canvas);
   const ctx = canvas.getContext("2d");
-  const objArray = [];
+  let objArray = [];
   let paused = false;
   let lastTime = new Date().getTime();
   let currentTime = 0;
   let dt = 0;
+
+  function onChange() {
+    const avg = objArray.reduce(
+      (acc, curr) => ({
+        ...acc,
+        [curr.state]: acc[curr.state] + 1
+      }),
+      {
+        healthy: 0,
+        sick: 0,
+        recovered: 0,
+        dead: 0
+      }
+    );
+
+    Object.keys(avg).forEach(
+      key => (document.getElementById(`value-${key}`).innerText = avg[key])
+    );
+  }
 
   function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -29,38 +49,43 @@ const main = (wrapper = document.body, config = CONFIG) => {
     canvas.style.backgroundColor = "rgb(215, 235, 240)";
   }
 
-  function wallCollision(ball) {
+  function wallCollision(person) {
     if (
-      ball.x - ball.radius + ball.dx < 0 ||
-      ball.x + ball.radius + ball.dx > canvas.width
+      person.x - person.radius + person.dx < 0 ||
+      person.x + person.radius + person.dx > canvas.width
     ) {
-      ball.dx *= -1;
+      person.dx *= -1;
     }
     if (
-      ball.y - ball.radius + ball.dy < 0 ||
-      ball.y + ball.radius + ball.dy > canvas.height
+      person.y - person.radius + person.dy < 0 ||
+      person.y + person.radius + person.dy > canvas.height
     ) {
-      ball.dy *= -1;
+      person.dy *= -1;
     }
-    if (ball.y + ball.radius > canvas.height) {
-      ball.y = canvas.height - ball.radius;
+    if (person.y + person.radius > canvas.height) {
+      person.y = canvas.height - person.radius;
     }
-    if (ball.y - ball.radius < 0) {
-      ball.y = ball.radius;
+    if (person.y - person.radius < 0) {
+      person.y = person.radius;
     }
-    if (ball.x + ball.radius > canvas.width) {
-      ball.x = canvas.width - ball.radius;
+    if (person.x + person.radius > canvas.width) {
+      person.x = canvas.width - person.radius;
     }
-    if (ball.x - ball.radius < 0) {
-      ball.x = ball.radius;
+    if (person.x - person.radius < 0) {
+      person.x = person.radius;
     }
   }
 
-  function ballCollision() {
+  function personCollision() {
     for (let i = 0; i < objArray.length - 1; i++) {
       for (let j = i + 1; j < objArray.length; j++) {
         let ob1 = objArray[i];
         let ob2 = objArray[j];
+
+        if (ob1.state === "dead" || ob2.state === "dead") {
+          continue;
+        }
+
         let dist = distance(ob1, ob2);
 
         if (dist < ob1.radius + ob2.radius) {
@@ -182,7 +207,7 @@ const main = (wrapper = document.body, config = CONFIG) => {
 
     if (!paused) {
       moveObjects();
-      ballCollision();
+      personCollision();
     }
 
     drawObjects();
@@ -191,21 +216,46 @@ const main = (wrapper = document.body, config = CONFIG) => {
     window.requestAnimationFrame(draw);
   }
 
-  // spawn the initial small thingies.
-  for (let i = 0; i < config.amount; i++) {
-    objArray[objArray.length] = new Ball(
-      randomX(config),
-      randomY(config),
-      ctx,
-      config.radius
-    );
+  function init() {
+    canvas.setAttribute("width", config.width);
+    canvas.setAttribute("height", config.height);
+
+    objArray = [];
+
+    lastTime = new Date().getTime();
+    currentTime = 0;
+    dt = 0;
+
+    // spawn the initial small thingies.
+    for (let i = 0; i < config.amount; i++) {
+      const person = new Person(
+        randomX(config),
+        randomY(config),
+        ctx,
+        config.radius
+      );
+
+      person.onChange = onChange;
+
+      objArray[objArray.length] = person;
+    }
+
+    // one is sick
+
+    objArray[0].state = "sick";
+    objArray[1].state = "sick";
+    objArray[2].state = "sick";
+
+    draw();
   }
 
-  // one is sick
+  init();
 
-  objArray[0].state = "sick";
-
-  draw();
+  return {
+    init
+  };
 };
 
-main();
+const app = main();
+
+ConfigGui(CONFIG, app.init);
