@@ -1,0 +1,33 @@
+
+  body {
+    background-color: khaki;
+    text-align: center;
+    font-family: Ubuntu Mono;
+  }
+
+  #title {
+    color: black;
+    font-size: 200%;
+    font-style: normal;
+    margin: 1px;
+    border: 1px;
+  }
+
+  #balls {
+    margin-top: 5px;
+  }
+
+  #myCanvas {
+    margin-top: -20px;
+  }
+
+  section.footer {
+    color: black;
+    font-family: Ubuntu Mono;
+    font-style: normal;
+    font-size: small;
+  }
+  #disclaimer {
+  	font-size: 74%;
+  	color: gray;
+  }

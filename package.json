@@ -1,0 +1,15 @@
+{
+  "name": "covid-simulation",
+  "version": "1.0.0",
+  "description": "Pandemia simulation",
+  "main": "index.js",
+  "scripts": {
+    "watch": "./node_modules/.bin/browser-sync start -s -w ./js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mateusz Wojczal",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.26.7"
+  }
+}
