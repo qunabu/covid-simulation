@@ -7,7 +7,7 @@ const COLORS = {
   dead: "#333333"
 };
 
-const TICK_RECOVER = 100;
+const TICK_RECOVER = 300;
 
 export default class Ball {
   constructor(x, y, ctx, radius = 10, speed = 5, age = 15) {
