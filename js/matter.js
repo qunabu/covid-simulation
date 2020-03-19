@@ -186,6 +186,6 @@ const main = (wrapper = document.body, config = CONFIG) => {
 
 const app = main();
 
-let timer = setInterval(() => app.tick(timer++), 1000);
+let timer = setInterval(() => app.tick(timer++), 100);
 
 ConfigGui(CONFIG, app.init);

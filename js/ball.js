@@ -5,8 +5,8 @@ const COLORS = {
   dead: "#333333"
 };
 
-/** one Tick one second */
-const TICK_RECOVER = 5;
+/** one Tick 100ms */
+const TICK_RECOVER = 50;
 
 const DEFAULT_VELOCITY = 5;
 
@@ -50,6 +50,7 @@ export default class Ball {
       this.color = COLORS[value];
       this.onChange();
       switch (value) {
+        case "sick":
         case "healthy":
           this._tick = 0;
           break;
