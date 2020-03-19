@@ -5,6 +5,9 @@
 
 ### Resources 
 
-
 * Inspiration from https://www.washingtonpost.com/graphics/2020/world/corona-simulator/
 
+### Development 
+
+* Vanilla es6 
+* `npm run watch` lanuches `browser-sync`
