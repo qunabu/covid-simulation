@@ -102,7 +102,7 @@ const main = (wrapper = document.body, config = CONFIG) => {
     const infected = Math.ceil(config.amount * config.percInfected);
 
     const ages = Array.from({ length: config.amount }, (v, i) =>
-      getRandomAge(CONFIG, AGES)
+      getRandomAge(config, AGES)
     );
 
     ages.forEach((age, i) => {
