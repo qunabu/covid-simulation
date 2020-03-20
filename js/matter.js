@@ -1,13 +1,6 @@
 import Ball from "./ball.js";
-import ConfigGui from "./config.js";
-
-const CONFIG = {
-  width: 800,
-  height: 400,
-  wall: 5,
-  amount: 200,
-  percInfected: 0.03
-};
+import { config as CONFIG, ConfigGui, AGES } from "./config.js";
+import { getRandomAge } from "./utils.js";
 
 const Engine = Matter.Engine,
   Render = Matter.Render,
@@ -108,10 +101,15 @@ const main = (wrapper = document.body, config = CONFIG) => {
 
     const infected = Math.ceil(config.amount * config.percInfected);
 
-    for (let i = 0; i < config.amount; i++) {
+    const ages = Array.from({ length: 100 }, (v, i) =>
+      getRandomAge(CONFIG, AGES)
+    );
+
+    ages.forEach((age, i) => {
       const ball = new Ball(
         Matter.Common.random(config.wall * 3, config.width - config.wall * 3),
-        Matter.Common.random(config.wall * 3, config.height - config.wall * 3)
+        Matter.Common.random(config.wall * 3, config.height - config.wall * 3),
+        age
       );
       ball.onChange = onChange;
 
@@ -120,7 +118,7 @@ const main = (wrapper = document.body, config = CONFIG) => {
       }
 
       balls.push(ball);
-    }
+    });
 
     World.add(
       engine.world,
