@@ -1,6 +1,6 @@
 import Ball from "./ball.js";
 import { config as CONFIG, ConfigGui, AGES } from "./config.js";
-import { getRandomAge } from "./utils.js";
+import { getRandomAge, getAgeRangeKeyByAge } from "./utils.js";
 
 const Engine = Matter.Engine,
   Render = Matter.Render,
@@ -122,6 +122,7 @@ const main = (wrapper = document.body, config = CONFIG) => {
         Matter.Common.random(config.wall * 3, config.width - config.wall * 3),
         Matter.Common.random(config.wall * 3, config.height - config.wall * 3),
         age,
+        config[getAgeRangeKeyByAge(AGES)(age)],
         config
       );
       ball.onChange = onChange;

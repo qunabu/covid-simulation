@@ -1,4 +1,6 @@
 /** one Tick 100ms */
+import { STATES } from './consts.js'
+
 const TICK_RECOVER = 50;
 
 const DEFAULT_OPTS = {
@@ -11,7 +13,9 @@ const DEFAULT_OPTS = {
 };
 
 export default class Ball {
-  constructor(x, y, age = 15, config) {
+  constructor(x, y, age = 15, probabilityOfFatality = 0.5, config) {
+    console.log('age', age)
+    this._probabilityOfFatality = probabilityOfFatality
     this._config = config;
     this._body = Matter.Bodies.circle(x, y, 5, {
       ...DEFAULT_OPTS,
@@ -42,7 +46,7 @@ export default class Ball {
     */
 
     this._tick = 0;
-    this.state = "healthy";
+    this.state = STATES.healthy;
   }
 
   get body() {
@@ -55,11 +59,11 @@ export default class Ball {
       this.color = this._config.colors[value];
       this.onChange();
       switch (value) {
-        case "sick":
-        case "healthy":
+        case STATES.sick:
+        case STATES.healthy:
           this._tick = 0;
           break;
-        case "dead":
+        case STATES.dead:
           this.die();
           break;
         default:
@@ -90,28 +94,23 @@ export default class Ball {
   }
 
   tick() {
-    if (this.state !== "healthy") {
+    if (this.state !== STATES.healthy) {
       this._tick++;
     }
 
-    if (this.state === "sick") {
+    if (this.state === STATES.sick) {
       /** ADD dead state  */
       if (this._tick++ > TICK_RECOVER) {
-        const rnd = Math.random();
-        if (rnd > 0.5) {
-          this.state = "recovered";
-        } else {
-          this.state = "dead";
-        }
+        this.state = Math.random() > this._probabilityOfFatality ? STATES.recovered : STATES.dead
       }
     }
   }
 
   collide(ballB) {
-    if (this.state === "healthy" && ballB.state === "sick") {
+    if (this.state === STATES.healthy && ballB.state === STATES.sick) {
       /** TODO propability of sicknes, based on age */
       if (Math.random() > 0.5) {
-        this.state = "sick";
+        this.state = STATES.sick;
       }
     }
   }
