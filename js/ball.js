@@ -1,14 +1,5 @@
-const COLORS = {
-  healthy: "#AAC6CA",
-  sick: "#BB641D",
-  recovered: "#CB8AC0",
-  dead: "#333333"
-};
-
 /** one Tick 100ms */
 const TICK_RECOVER = 50;
-
-const DEFAULT_VELOCITY = 5;
 
 const DEFAULT_OPTS = {
   frictionAir: 0,
@@ -20,7 +11,8 @@ const DEFAULT_OPTS = {
 };
 
 export default class Ball {
-  constructor(x, y, age = 15) {
+  constructor(x, y, age = 15, config) {
+    this._config = config;
     this._body = Matter.Bodies.circle(x, y, 5, {
       ...DEFAULT_OPTS,
       render: {
@@ -32,9 +24,22 @@ export default class Ball {
     this._body.data = this;
 
     Matter.Body.applyForce(this._body, this._body.position, {
-      x: Matter.Common.random(-DEFAULT_VELOCITY, DEFAULT_VELOCITY),
-      y: Matter.Common.random(-DEFAULT_VELOCITY, DEFAULT_VELOCITY)
+      x: Matter.Common.random(
+        -this._config.initialMaxXYSpeed,
+        this._config.initialMaxXYSpeed
+      ),
+      y: Matter.Common.random(
+        -this._config.initialMaxXYSpeed,
+        this._config.initialMaxXYSpeed
+      )
     });
+
+    /*
+    Matter.Body.applyForce(this._body, this._body.position, {
+      x: 1,
+      y: 1
+    });
+    */
 
     this._tick = 0;
     this.state = "healthy";
@@ -47,7 +52,7 @@ export default class Ball {
   set state(value) {
     if (this._state !== value) {
       this._state = value;
-      this.color = COLORS[value];
+      this.color = this._config.colors[value];
       this.onChange();
       switch (value) {
         case "sick":
