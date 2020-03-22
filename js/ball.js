@@ -121,7 +121,7 @@ export default class Ball {
   }
 
   collide(ballB) {
-    if (this.state === "healthy" && ballB.state === "infected") {
+    if (this.state === "healthy" && (ballB.state === "infected" || ballB.state === "sick")) {
       /** TODO propability of sicknes, based on age */
       if (Math.random() < this._config.probInfection) {
         this.state = "infected";
