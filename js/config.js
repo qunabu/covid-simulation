@@ -88,6 +88,11 @@ export const config = {
     probInfection:
       "Propability that one ball will infect another in case of collision",
     probInfectionSick: "Propability that infection will convert to sickness"
+  },
+  simulationLevel: {
+    casual: 0,
+    normal: 1,
+    brutal: 2
   }
 };
 
@@ -187,6 +192,14 @@ export const ConfigGui = (config, onSubmit) => {
   f4.add(config, "probInfectionSick", 0, 1)
     .step(0.001)
     .title(config.descriptions.probInfectionSick);
+
+  const f5 = gui.addFolder("Game Difficulty");
+
+  f5.add(config, "simulationLevel", {
+    casual: config.simulationLevel.casual,
+    normal: config.simulationLevel.normal,
+    brutal: config.simulationLevel.brutal
+  });
 
   gui.add(actions, "restartOrRedraw");
 

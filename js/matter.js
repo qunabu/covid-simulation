@@ -1,7 +1,7 @@
 import Ball from "./ball.js";
 import { config as CONFIG, ConfigGui, AGES } from "./config.js";
 import { getRandomAge, getAgeRangeKeyByAge } from "./utils.js";
-import { STATES } from './consts.js'
+import { STATES } from "./consts.js";
 
 const Engine = Matter.Engine,
   Render = Matter.Render,
@@ -15,7 +15,6 @@ const main = (wrapper = document.body, config = CONFIG) => {
 
   const engine = Engine.create();
 
-  engine.world.gravity.y = 0;
   engine.world.gravity.y = 0;
 
   const pushSeries = row => {
@@ -56,7 +55,7 @@ const main = (wrapper = document.body, config = CONFIG) => {
       width: config.width,
       height: config.height,
       wireframes: false,
-      background: "#ddd"
+      background: "#000"
     }
   });
 
@@ -128,7 +127,8 @@ const main = (wrapper = document.body, config = CONFIG) => {
         age,
         {
           ...config,
-          probFatality: config[getAgeRangeKeyByAge(AGES)(age).replace('distr', 'fatal')]
+          probFatality:
+            config[getAgeRangeKeyByAge(AGES)(age).replace("distr", "fatal")]
         }
       );
       ball.onChange = onChange;
