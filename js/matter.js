@@ -10,11 +10,16 @@ const Engine = Matter.Engine,
 const main = (wrapper = document.body, config = CONFIG) => {
   const balls = [];
   const walls = [];
+  const series = [];
 
   const engine = Engine.create();
 
   engine.world.gravity.y = 0;
   engine.world.gravity.y = 0;
+
+  const pushSeries = row => {
+    series.push(row);
+  };
 
   const onChange = () => {
     const avg = balls.reduce(
@@ -26,13 +31,20 @@ const main = (wrapper = document.body, config = CONFIG) => {
         healthy: 0,
         sick: 0,
         recovered: 0,
-        dead: 0
+        dead: 0,
+        infected: 0
       }
     );
 
     Object.keys(avg).forEach(
       key => (document.getElementById(`value-${key}`).innerText = avg[key])
     );
+
+    pushSeries(avg);
+
+    if (avg.sick === 0 && avg.infected === 0) {
+      stop();
+    }
   };
 
   const render = Render.create({
@@ -46,9 +58,9 @@ const main = (wrapper = document.body, config = CONFIG) => {
   });
 
   const wall_opts = {
-    isStatic: true,
-    restitution: 1,
-    inertia: 0
+    isStatic: true
+    //restitution: 1,
+    //inertia: 0
   };
 
   const createWalls = () => {
@@ -109,7 +121,8 @@ const main = (wrapper = document.body, config = CONFIG) => {
       const ball = new Ball(
         Matter.Common.random(config.wall * 3, config.width - config.wall * 3),
         Matter.Common.random(config.wall * 3, config.height - config.wall * 3),
-        age
+        age,
+        config
       );
       ball.onChange = onChange;
 
@@ -132,6 +145,9 @@ const main = (wrapper = document.body, config = CONFIG) => {
   };
 
   function init() {
+    while (series.length) {
+      series.pop();
+    }
     resize();
     createWalls();
     createBalls();
@@ -149,29 +165,20 @@ const main = (wrapper = document.body, config = CONFIG) => {
     });
   });
 
-  /*
-  Matter.Events.on(engine, "collisionEnd", function(event) {
-    event.pairs.forEach(pair => {
-      if (pair.bodyA.label.includes("Rectangle")) {
-        const ball = pair.bodyB;
-        console.log("ball", ball);
-        Matter.Body.setVelocity(ball, {
-          x:
-            Math.abs(ball.velocity.x) < 5
-              ? 2 * ball.velocity.x
-              : ball.velocity.x,
-          y:
-            Math.abs(ball.velocity.y) < 5
-              ? 2 * ball.velocity.y
-              : ball.velocity.y
-        });
-      }
-    });
-  });
-  */
+  /** https://github.com/liabru/matter-js/issues/394 */
+  Matter.Resolver._restingThresh = 0.001;
 
   const tick = i => {
     balls.forEach(ball => ball.tick(i));
+  };
+
+  const stop = () => {
+    balls.forEach(ball =>
+      Matter.Body.setVelocity(ball.body, {
+        x: 0,
+        y: 0
+      })
+    );
   };
 
   init();

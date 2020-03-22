@@ -13,10 +13,18 @@ export const AGES = {
 };
 
 export const config = {
-  width: 800, // width of canvas
-  height: 400, // height of canvas
-  wall: 5, // wall thickness
-  amount: 200, // amount of balls
+  speedMultiplier: 2, // on collision fix
+  initialMaxXYSpeed: 2, // on inital max x,y speed
+  minimalXYSpeed: 0.3, // minimal speed of x,y
+  width: Math.round(window.innerWidth / 2), // width of canvas
+  height: Math.round(window.innerHeight / 2), // height of canvas
+  wall: 1, // wall thickness
+  radius: 5, // radius of ball
+  amount: Math.round(
+    Math.sqrt(
+      (window.innerWidth / (2 * 2.5)) * (window.innerHeight / (2 * 2.5))
+    )
+  ), // amount of balls on enter
   percInfected: 0.03, // percetage of initialy infected
   // distribution of age in population
   distrAge9: 0.03,
@@ -37,7 +45,13 @@ export const config = {
   fatalAge59: 0.006,
   fatalAge69: 0.022,
   fatalAge79: 0.051,
-  fatalAge100: 0.093
+  fatalAge100: 0.093,
+  colors: {
+    healthy: "#AAC6CA",
+    sick: "#BB641D",
+    recovered: "#CB8AC0",
+    dead: "#333333"
+  }
 };
 
 export const ConfigGui = (config, onSubmit) => {
