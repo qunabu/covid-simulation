@@ -128,7 +128,7 @@ const main = (wrapper = document.body, config = CONFIG) => {
         age,
         {
           ...config,
-          probFatality: config[getAgeRangeKeyByAge(AGES)(age)]
+          probFatality: config[getAgeRangeKeyByAge(AGES)(age).replace('distr', 'fatal')]
         }
       );
       ball.onChange = onChange;

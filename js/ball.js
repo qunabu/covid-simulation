@@ -111,7 +111,7 @@ export default class Ball {
 
     if (this.state === STATES.sick) {
       if (this._tick++ > TICK_RECOVER) {
-        this.state = Matter.Common.random(0,1) > this._config.probFatality ? STATES.recovered : STATES.dead
+        this.state = Matter.Common.random(0,1) < this._config.probFatality ? STATES.dead : STATES.recovered
       }
     }
   }
