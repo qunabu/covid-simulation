@@ -18,7 +18,7 @@ export default class Ball {
       render: {
         fillStyle: "#F35e66",
         strokeStyle: "black",
-        lineWidth: 1
+        lineWidth: 0
       }
     });
     this._body.data = this;
@@ -56,7 +56,9 @@ export default class Ball {
       this.onChange();
       switch (value) {
         case "sick":
+        case "infected":
         case "healthy":
+          // reset tick on each state change
           this._tick = 0;
           break;
         case "dead":
@@ -94,8 +96,17 @@ export default class Ball {
       this._tick++;
     }
 
+    //*** this is temporary to be replaced by better algortithm -start- */
+
+    if (this.state === "infected") {
+      if (this._tick++ > TICK_RECOVER) {
+        if (Math.random() <= this._config.probInfection) {
+          this.state = "sick";
+        }
+      }
+    }
+
     if (this.state === "sick") {
-      /** ADD dead state  */
       if (this._tick++ > TICK_RECOVER) {
         const rnd = Math.random();
         if (rnd > 0.5) {
@@ -105,13 +116,15 @@ export default class Ball {
         }
       }
     }
+
+    //*** this is temporary to be replaced by better algortithm -end- */
   }
 
   collide(ballB) {
-    if (this.state === "healthy" && ballB.state === "sick") {
+    if (this.state === "healthy" && ballB.state === "infected") {
       /** TODO propability of sicknes, based on age */
-      if (Math.random() > 0.5) {
-        this.state = "sick";
+      if (Math.random() < this._config.probInfection) {
+        this.state = "infected";
       }
     }
   }
