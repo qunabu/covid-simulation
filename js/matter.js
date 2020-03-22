@@ -19,6 +19,7 @@ const main = (wrapper = document.body, config = CONFIG) => {
 
   const pushSeries = row => {
     series.push(row);
+    //update diagram here
   };
 
   const onChange = () => {
@@ -53,7 +54,8 @@ const main = (wrapper = document.body, config = CONFIG) => {
     options: {
       width: config.width,
       height: config.height,
-      wireframes: false
+      wireframes: false,
+      background: "#ddd"
     }
   });
 
@@ -113,6 +115,7 @@ const main = (wrapper = document.body, config = CONFIG) => {
 
     const infected = Math.ceil(config.amount * config.percInfected);
 
+    /** create array of distrubites age */
     const ages = Array.from({ length: config.amount }, (v, i) =>
       getRandomAge(config, AGES)
     );
@@ -128,7 +131,7 @@ const main = (wrapper = document.body, config = CONFIG) => {
       ball.onChange = onChange;
 
       if (i < infected) {
-        ball.state = "sick";
+        ball.state = "infected";
       }
 
       balls.push(ball);
