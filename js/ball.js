@@ -53,18 +53,16 @@ export default class Ball {
     if (this._state !== value) {
       this._state = value;
       this.color = this._config.colors[value];
-
-      this.sound = new Audio(this._config.sounds[value]).play();
-      console.log(this.sound)
       this.onChange();
       switch (value) {
         case "sick":
         case "infected":
         case "healthy":
-          // reset tick on each state change
+          // reset tick on each state change 
           this._tick = 0;
           break;
         case "dead":
+          new Audio(this._config.sounds[value]).play();
           this.die();
           break;
         default:
@@ -87,6 +85,7 @@ export default class Ball {
   }
 
   die() {
+
     Matter.Body.setVelocity(this.body, {
       x: 0,
       y: 0

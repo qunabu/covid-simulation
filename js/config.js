@@ -89,10 +89,6 @@ export const config = {
     probInfectionSick: "Propability that infection will convert to sickness"
   },
   sounds: {
-    // healthy: "#AAC6CA",
-    // infected: "#3b78e7",
-    // sick: "#BB641D",
-    // recovered: "#CB8AC0",
     dead: "../assets/sounds/dead.mp3",
   }
 };
