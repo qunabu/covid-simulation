@@ -162,6 +162,7 @@ const main = (wrapper = document.body, config = CONFIG) => {
     });
   });
 
+  /** https://github.com/liabru/matter-js/issues/394 */
   Matter.Resolver._restingThresh = 0.001;
 
   const tick = i => {
@@ -178,8 +179,6 @@ const main = (wrapper = document.body, config = CONFIG) => {
   };
 
   init();
-
-  window._e = engine;
 
   return {
     init,
