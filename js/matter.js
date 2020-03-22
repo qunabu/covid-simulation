@@ -145,6 +145,9 @@ const main = (wrapper = document.body, config = CONFIG) => {
   };
 
   function init() {
+    while (series.length) {
+      series.pop();
+    }
     resize();
     createWalls();
     createBalls();
