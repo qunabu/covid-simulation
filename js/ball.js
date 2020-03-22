@@ -53,6 +53,9 @@ export default class Ball {
     if (this._state !== value) {
       this._state = value;
       this.color = this._config.colors[value];
+
+      this.sound = new Audio(this._config.sounds[value]).play();
+      console.log(this.sound)
       this.onChange();
       switch (value) {
         case "sick":

@@ -87,13 +87,20 @@ export const config = {
     probInfection:
       "Propability that one ball will infect another in case of collision",
     probInfectionSick: "Propability that infection will convert to sickness"
+  },
+  sounds: {
+    // healthy: "#AAC6CA",
+    // infected: "#3b78e7",
+    // sick: "#BB641D",
+    // recovered: "#CB8AC0",
+    dead: "../assets/sounds/dead.mp3",
   }
 };
 
 //extend gui
 
 for (const contoller in dat.controllers) {
-  dat.controllers[contoller].prototype.title = function(title) {
+  dat.controllers[contoller].prototype.title = function (title) {
     const titleNode = document.createElement("div");
     titleNode.classList.add("tooltip");
     titleNode.innerText = title;
