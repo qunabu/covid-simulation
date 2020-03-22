@@ -51,10 +51,10 @@ export const config = {
   fatalAge100: 0.093,
   colors: {
     healthy: "#AAC6CA",
-    infected: "#3b78e7",
-    sick: "#BB641D",
+    infected: "#FFBA49",
+    sick: "#ED2A10",
     recovered: "#CB8AC0",
-    dead: "#333333"
+    dead: "#000000"
   },
   descriptions: {
     distrAge9: "Percentage of age 0-9 distribition from whole population",
