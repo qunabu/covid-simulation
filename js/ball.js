@@ -13,9 +13,7 @@ const DEFAULT_OPTS = {
 };
 
 export default class Ball {
-  constructor(x, y, age = 15, probabilityOfFatality = 0.5, config) {
-    console.log('age', age)
-    this._probabilityOfFatality = probabilityOfFatality
+  constructor(x, y, age = 15, config) {
     this._config = config;
     this._body = Matter.Bodies.circle(x, y, 5, {
       ...DEFAULT_OPTS,
@@ -101,28 +99,28 @@ export default class Ball {
 
     //*** this is temporary to be replaced by better algortithm -start- */
 
-    if (this.state === "infected") {
+    if (this.state === STATES.infected) {
       if (this._tick++ > TICK_RECOVER) {
-        if (Math.random() <= this._config.probInfection) {
-          this.state = "sick";
+        if (Math.random() <= this._config.probInfectionSick) {
+          this.state = STATES.sick;
         }
       }
     }
 
+    //*** this is temporary to be replaced by better algortithm -end- */
+
     if (this.state === STATES.sick) {
       if (this._tick++ > TICK_RECOVER) {
-        this.state = Math.random() > this._probabilityOfFatality ? STATES.recovered : STATES.dead
+        this.state = Matter.Common.random(0,1) > this._config.probFatality ? STATES.recovered : STATES.dead
       }
     }
-
-    //*** this is temporary to be replaced by better algortithm -end- */
   }
 
   collide(ballB) {
-    if (this.state === STATES.healthy && (ballB.state === "infected" || ballB.state === STATES.sick)) {
-      /** TODO propability of sicknes, based on age */
+    if (this.state === STATES.healthy && (ballB.state === STATES.infected || ballB.state === STATES.sick)) {
+      /** TODO probability of sicknes, based on age */
       if (Math.random() < this._config.probInfection) {
-        this.state = "infected";
+        this.state = STATES.infected;
       }
     }
   }
