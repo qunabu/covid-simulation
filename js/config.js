@@ -39,6 +39,7 @@ export const config = {
   distrAge79: 0.03,
   distrAge100: 0.02,
   // fatality rate
+  probFatality: 0.02, // probability of fatality
   fatalAge9: 0.00002,
   fatalAge19: 0.00006,
   fatalAge29: 0.0003,
