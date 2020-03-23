@@ -25,3 +25,33 @@ export function getRandomAge(config, ages) {
 
   return randomInteger(ages[ageKey][0], ages[ageKey][1]);
 }
+
+export const timer = (time, onTick = () => {}) => {
+  let tick = 0;
+  let interval;
+
+  const ticker = () => {
+    onTick(tick++);
+  };
+
+  const start = () => {
+    interval = setInterval(ticker, time);
+  };
+
+  const stop = () => {
+    clearInterval(interval);
+  };
+
+  const restart = () => {
+    tick = 0;
+    stop();
+    start();
+  };
+
+  start();
+
+  return {
+    stop,
+    restart
+  };
+};
