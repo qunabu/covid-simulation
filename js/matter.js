@@ -61,7 +61,7 @@ const main = (
       width: config.width,
       height: config.height,
       wireframes: false,
-      background: "#000"
+      background: "#ddd"
     }
   });
 
