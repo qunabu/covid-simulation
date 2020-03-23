@@ -26,16 +26,45 @@ export function getRandomAge(config, ages) {
   return randomInteger(ages[ageKey][0], ages[ageKey][1]);
 }
 
+export const timer = (time, onTick = () => {}) => {
+  let tick = 0;
+  let interval;
+
+  const ticker = () => {
+    onTick(tick++);
+  };
+
+  const start = () => {
+    interval = setInterval(ticker, time);
+  };
+
+  const stop = () => {
+    clearInterval(interval);
+  };
+
+  const restart = () => {
+    tick = 0;
+    stop();
+    start();
+  };
+
+  start();
+
+  return {
+    stop,
+    restart
+  };
+};
 /**
  * @param {number} min
  * @param {number} max
  * @returns {function(number): boolean}
  */
-const isInRange = ([min, max]) => value => value >= min && value <= max
+const isInRange = ([min, max]) => value => value >= min && value <= max;
 
 /**
  * @param {Object} ageRanges
  * @returns {function(number): string}
  */
 export const getAgeRangeKeyByAge = ageRanges => age =>
-  Object.keys(ageRanges).find((rangeKey) => isInRange(ageRanges[rangeKey])(age))
+  Object.keys(ageRanges).find(rangeKey => isInRange(ageRanges[rangeKey])(age));

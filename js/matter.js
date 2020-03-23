@@ -1,6 +1,8 @@
+import "./../assets/matter.min.js";
 import Ball from "./ball.js";
 import { config as CONFIG, ConfigGui, AGES } from "./config.js";
-import { getRandomAge, getAgeRangeKeyByAge } from "./utils.js";
+import { Stats } from "./stats.js";
+import { getRandomAge, getAgeRangeKeyByAge, timer } from "./utils.js";
 import { STATES } from "./consts.js";
 
 const Engine = Matter.Engine,
@@ -8,22 +10,32 @@ const Engine = Matter.Engine,
   World = Matter.World,
   Bodies = Matter.Bodies;
 
-const main = (wrapper = document.body, config = CONFIG) => {
+const main = (
+  wrapper = document.body,
+  config = CONFIG,
+  onUpdate = () => {},
+  onStop = () => {}
+) => {
   const balls = [];
   const walls = [];
-  const series = [];
+  let avg = {
+    healthy: 0,
+    sick: 0,
+    recovered: 0,
+    dead: 0,
+    infected: 0
+  };
 
   const engine = Engine.create();
 
   engine.world.gravity.y = 0;
 
-  const pushSeries = row => {
-    series.push(row);
-    //update diagram here
+  const pushSeries = n => {
+    onUpdate({ ...avg, n });
   };
 
   const onChange = () => {
-    const avg = balls.reduce(
+    avg = balls.reduce(
       (acc, curr) => ({
         ...acc,
         [curr.state]: acc[curr.state] + 1
@@ -37,19 +49,13 @@ const main = (wrapper = document.body, config = CONFIG) => {
       }
     );
 
-    Object.keys(avg).forEach(
-      key => (document.getElementById(`value-${key}`).innerText = avg[key])
-    );
-
-    pushSeries(avg);
-
     if (avg.sick === 0 && avg.infected === 0) {
       stop();
     }
   };
 
   const render = Render.create({
-    element: document.getElementById("app"),
+    element: wrapper,
     engine: engine,
     options: {
       width: config.width,
@@ -131,11 +137,12 @@ const main = (wrapper = document.body, config = CONFIG) => {
             config[getAgeRangeKeyByAge(AGES)(age).replace("distr", "fatal")]
         }
       );
-      ball.onChange = onChange;
 
       if (i < infected) {
         ball.state = STATES.infected;
       }
+
+      ball.onChange = onChange;
 
       balls.push(ball);
     });
@@ -152,12 +159,10 @@ const main = (wrapper = document.body, config = CONFIG) => {
   };
 
   function init() {
-    while (series.length) {
-      series.pop();
-    }
     resize();
     createWalls();
     createBalls();
+    onChange();
   }
 
   Engine.run(engine);
@@ -168,6 +173,7 @@ const main = (wrapper = document.body, config = CONFIG) => {
       if (pair.bodyA.data && pair.bodyB.data) {
         pair.bodyA.data.collide(pair.bodyB.data);
         pair.bodyB.data.collide(pair.bodyA.data);
+        //stop();
       }
     });
   });
@@ -177,6 +183,7 @@ const main = (wrapper = document.body, config = CONFIG) => {
 
   const tick = i => {
     balls.forEach(ball => ball.tick(i));
+    pushSeries(i);
   };
 
   const stop = () => {
@@ -186,18 +193,48 @@ const main = (wrapper = document.body, config = CONFIG) => {
         y: 0
       })
     );
+    onStop();
   };
 
   init();
 
   return {
     init,
-    tick
+    tick,
+    stop
   };
 };
 
-const app = main();
+const stats = new Stats(document.getElementById("stats"), CONFIG);
 
-let timer = setInterval(() => app.tick(timer++), 100);
+const app = main(
+  document.getElementById("app"),
+  CONFIG,
+  series => {
+    stats.update(series);
+  },
+  () => {
+    stop();
+  }
+);
 
-ConfigGui(CONFIG, app.init);
+const t = timer(100, tick => {
+  app.tick(tick);
+});
+
+const restart = () => {
+  t.restart();
+  app.init();
+  stats.configure();
+};
+
+const stop = () => {
+  t.stop();
+  //app.stop();
+};
+
+ConfigGui(CONFIG, () => {
+  restart();
+});
+
+window.addEventListener("keyup", e => e.which === 80 && stop());

@@ -9,16 +9,24 @@
 
 <body>
     <main>
-        <aside>
-            <span id="dot-healthy"> </span><span>Healty:</span> <span id="value-healthy"></span>
-            <span id="dot-infected"> </span><span>Infected:</span> <span id="value-infected"></span>
-            <span id="dot-sick"> </span><span>Sick:</span> <span id="value-sick"></span>
-            <span id="dot-recovered"> </span><span>Recovered:</span> <span id="value-recovered"></span>
-            <span id="dot-dead"> </span><span>Dead:</span> <span id="value-dead"></span>
-        </aside>
+        <div id="stats">
+            <ul>
+                <li><span id="dot-healthy"> </span><span>Healty:</span> <span id="value-healthy"></span>
+                </li>
+                <li><span id="dot-infected"> </span><span>Infected:</span> <span id="value-infected"></span>
+                </li>
+                <li><span id="dot-sick"> </span><span>Sick:</span> <span id="value-sick"></span>
+                </li>
+                <li><span id="dot-recovered"> </span><span>Recovered:</span> <span id="value-recovered"></span>
+                </li>
+                <li><span id="dot-dead"> </span><span>Dead:</span> <span id="value-dead"></span>
+                </li>
+            </ul>
+            <canvas id="chart-time"></canvas>
+        </div>
+
         <article id="app"></article>
     </main>
-    <script src="assets/matter.min.js"></script>
     <script type="module" src="js/matter.js"></script>
 
 </body>

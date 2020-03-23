@@ -18,6 +18,7 @@ export const config = {
   minimalXYSpeed: 0.3, // minimal speed of x,y
   width: Math.round(window.innerWidth / 2), // width of canvas
   height: Math.round(window.innerHeight / 2), // height of canvas
+  chartHeight: 80,
   wall: 1, // wall thickness
   radius: 5, // radius of ball
   amount: Math.round(
@@ -29,6 +30,8 @@ export const config = {
   probInfection: 0.8, // propability that one ball will infect another in case of collision
   // distribution of age in population
   probInfectionSick: 0.9, // propability that infection will convert to sickness
+  cyclesToRecoverOrDie: 50, // number of cycles to recover or die
+  cyclesInterval: 100, // ms of each interval
   distrAge9: 0.03,
   distrAge19: 0.07,
   distrAge29: 0.14,
@@ -87,7 +90,9 @@ export const config = {
     percInfected: "Percentage of initialy infected",
     probInfection:
       "Propability that one ball will infect another in case of collision",
-    probInfectionSick: "Propability that infection will convert to sickness"
+    probInfectionSick: "Propability that infection will convert to sickness",
+    cyclesToRecoverOrDie: "number of cycles to recover or fatal sickness",
+    cyclesInterval: "time of each cycle in ms"
   },
   simulationLevel: {
     casual: 0,
@@ -120,6 +125,9 @@ export const ConfigGui = (config, onSubmit) => {
   f1.add(config, "width", 500, 1500).step(1);
   f1.add(config, "height", 200, 1000).step(1);
   f1.add(config, "amount", 1, 1000).step(1);
+  f1.add(config, "cyclesInterval", 100, 1000)
+    .step(100)
+    .title(config.descriptions.cyclesInterval);
 
   const f2 = gui.addFolder("Age Distribution");
   f2.add(config, "distrAge9", 0, 1)
@@ -193,15 +201,20 @@ export const ConfigGui = (config, onSubmit) => {
     .step(0.001)
     .title(config.descriptions.probInfectionSick);
 
-  const f5 = gui.addFolder("Game Difficulty");
+  f4.add(config, "cyclesToRecoverOrDie", 10, 100)
+    .step(1)
+    .title(config.descriptions.cyclesToRecoverOrDie);
 
+  const f5 = gui.addFolder("Game Difficulty");
   f5.add(config, "simulationLevel", {
     casual: config.simulationLevel.casual,
     normal: config.simulationLevel.normal,
     brutal: config.simulationLevel.brutal
   });
 
-  gui.add(actions, "restartOrRedraw");
+  gui
+    .add(actions, "restartOrRedraw")
+    .title("Press this button to restart simulation with new config");
 
   //colors dots
   Object.keys(config.colors).forEach(color => {
