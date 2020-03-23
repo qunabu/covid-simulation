@@ -1,7 +1,5 @@
 /** one Tick 100ms */
-import { STATES } from './consts.js'
-
-const TICK_RECOVER = 50;
+import { STATES } from "./consts.js";
 
 const DEFAULT_OPTS = {
   frictionAir: 0,
@@ -100,7 +98,7 @@ export default class Ball {
     //*** this is temporary to be replaced by better algortithm -start- */
 
     if (this.state === STATES.infected) {
-      if (this._tick++ > TICK_RECOVER) {
+      if (this._tick++ > this._config.cyclesToRecoverOrDie) {
         if (Math.random() <= this._config.probInfectionSick) {
           this.state = STATES.sick;
         }
@@ -110,14 +108,20 @@ export default class Ball {
     //*** this is temporary to be replaced by better algortithm -end- */
 
     if (this.state === STATES.sick) {
-      if (this._tick++ > TICK_RECOVER) {
-        this.state = Matter.Common.random(0,1) < this._config.probFatality ? STATES.dead : STATES.recovered
+      if (this._tick++ > this._config.cyclesToRecoverOrDie) {
+        this.state =
+          Matter.Common.random(0, 1) < this._config.probFatality
+            ? STATES.dead
+            : STATES.recovered;
       }
     }
   }
 
   collide(ballB) {
-    if (this.state === STATES.healthy && (ballB.state === STATES.infected || ballB.state === STATES.sick)) {
+    if (
+      this.state === STATES.healthy &&
+      (ballB.state === STATES.infected || ballB.state === STATES.sick)
+    ) {
       /** TODO probability of sicknes, based on age */
       if (Math.random() < this._config.probInfection) {
         this.state = STATES.infected;
