@@ -30,7 +30,7 @@ export const config = {
   probInfection: 0.8, // propability that one ball will infect another in case of collision
   // distribution of age in population
   probInfectionSick: 0.9, // propability that infection will convert to sickness
-  cyclesToRecoverOrDie: 12, // number of cycles to recover or die
+  cyclesToRecoverOrDie: 50, // number of cycles to recover or die
   cyclesInterval: 100, // ms of each interval
   distrAge9: 0.03,
   distrAge19: 0.07,
