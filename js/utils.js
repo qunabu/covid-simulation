@@ -55,3 +55,16 @@ export const timer = (time, onTick = () => {}) => {
     restart
   };
 };
+/**
+ * @param {number} min
+ * @param {number} max
+ * @returns {function(number): boolean}
+ */
+const isInRange = ([min, max]) => value => value >= min && value <= max;
+
+/**
+ * @param {Object} ageRanges
+ * @returns {function(number): string}
+ */
+export const getAgeRangeKeyByAge = ageRanges => age =>
+  Object.keys(ageRanges).find(rangeKey => isInRange(ageRanges[rangeKey])(age));

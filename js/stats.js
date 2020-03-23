@@ -20,7 +20,7 @@ export class Stats {
     this.canvas.setAttribute("height", height);
     this.context = this.canvas.getContext("2d");
 
-    this._keys = ["healthy", "infected", "sick", "recovered", "dead"];
+    this._keys = ["healthy", "infected", "recovered", "dead", "sick"];
 
     this.configure();
   }
@@ -38,10 +38,6 @@ export class Stats {
   }
 
   updateVisuals() {
-    const chartHeight = 100;
-    const total = this._config.amount;
-    let record;
-    let y = 0;
     const lastRecord = this._queue[this._queue.length - 1];
     if (lastRecord) {
       this._keys.forEach(
@@ -50,9 +46,15 @@ export class Stats {
       );
     }
 
+    const chartHeight = this._config.chartHeight;
+    const total = this._config.amount;
+    let record;
+    let y = 0;
+
     while ((record = this._queue.shift())) {
+      y = 0;
       this._keys.forEach(key => {
-        const height = (record[key] / total) * chartHeight;
+        const height = Math.round((record[key] / total) * chartHeight);
         const obj = {
           x: record.n,
           y: y,
@@ -60,6 +62,7 @@ export class Stats {
           height: height,
           fill: this._config.colors[key]
         };
+
         this.context.fillStyle = obj.fill;
         this.context.fillRect(obj.x, obj.y, obj.width, obj.height);
         y += height;

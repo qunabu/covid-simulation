@@ -1,8 +1,9 @@
 import "./../assets/matter.min.js";
 import Ball from "./ball.js";
 import { config as CONFIG, ConfigGui, AGES } from "./config.js";
-import { getRandomAge, timer } from "./utils.js";
 import { Stats } from "./stats.js";
+import { getRandomAge, getAgeRangeKeyByAge, timer } from "./utils.js";
+import { STATES } from "./consts.js";
 
 const Engine = Matter.Engine,
   Render = Matter.Render,
@@ -131,11 +132,15 @@ const main = (
         Matter.Common.random(config.wall * 3, config.width - config.wall * 3),
         Matter.Common.random(config.wall * 3, config.height - config.wall * 3),
         age,
-        config
+        {
+          ...config,
+          probFatality:
+            config[getAgeRangeKeyByAge(AGES)(age).replace("distr", "fatal")]
+        }
       );
 
       if (i < infected) {
-        ball.state = "infected";
+        ball.state = STATES.infected;
       }
 
       ball.onChange = onChange;
@@ -196,7 +201,8 @@ const main = (
 
   return {
     init,
-    tick
+    tick,
+    stop
   };
 };
 
@@ -225,8 +231,11 @@ const restart = () => {
 
 const stop = () => {
   t.stop();
+  //app.stop();
 };
 
 ConfigGui(CONFIG, () => {
   restart();
 });
+
+window.addEventListener("keyup", e => e.which === 80 && stop());
