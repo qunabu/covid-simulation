@@ -1,5 +1,5 @@
 /** one Tick 100ms */
-const TICK_RECOVER = 50;
+import {STATES} from "./consts.js";
 
 const DEFAULT_OPTS = {
   frictionAir: 0,
@@ -42,7 +42,7 @@ export default class Ball {
     */
 
     this._tick = 0;
-    this.state = "healthy";
+    this.state = STATES.healthy;
   }
 
   get body() {
@@ -55,13 +55,12 @@ export default class Ball {
       this.color = this._config.colors[value];
       this.onChange();
       switch (value) {
-        case "sick":
-        case "infected":
-        case "healthy":
-          // reset tick on each state change 
+        case STATES.sick:
+        case STATES.infected:
+        case STATES.healthy:
           this._tick = 0;
           break;
-        case "dead":
+        case STATES.dead:
           new Audio(this._config.sounds[value]).play();
           this.die();
           break;
@@ -85,7 +84,6 @@ export default class Ball {
   }
 
   die() {
-
     Matter.Body.setVelocity(this.body, {
       x: 0,
       y: 0
@@ -94,39 +92,40 @@ export default class Ball {
   }
 
   tick() {
-    if (this.state !== "healthy") {
+    if (this.state !== STATES.healthy) {
       this._tick++;
     }
 
     //*** this is temporary to be replaced by better algortithm -start- */
 
-    if (this.state === "infected") {
-      if (this._tick++ > TICK_RECOVER) {
-        if (Math.random() <= this._config.probInfection) {
-          this.state = "sick";
-        }
-      }
-    }
-
-    if (this.state === "sick") {
-      if (this._tick++ > TICK_RECOVER) {
-        const rnd = Math.random();
-        if (rnd > 0.5) {
-          this.state = "recovered";
-        } else {
-          this.state = "dead";
+    if (this.state === STATES.infected) {
+      if (this._tick++ > this._config.cyclesToRecoverOrDie) {
+        if (Math.random() <= this._config.probInfectionSick) {
+          this.state = STATES.sick;
         }
       }
     }
 
     //*** this is temporary to be replaced by better algortithm -end- */
+
+    if (this.state === STATES.sick) {
+      if (this._tick++ > this._config.cyclesToRecoverOrDie) {
+        this.state =
+          Matter.Common.random(0, 1) < this._config.probFatality
+            ? STATES.dead
+            : STATES.recovered;
+      }
+    }
   }
 
   collide(ballB) {
-    if (this.state === "healthy" && (ballB.state === "infected" || ballB.state === "sick")) {
-      /** TODO propability of sicknes, based on age */
+    if (
+      this.state === STATES.healthy &&
+      (ballB.state === STATES.infected || ballB.state === STATES.sick)
+    ) {
+      /** TODO probability of sicknes, based on age */
       if (Math.random() < this._config.probInfection) {
-        this.state = "infected";
+        this.state = STATES.infected;
       }
     }
   }
