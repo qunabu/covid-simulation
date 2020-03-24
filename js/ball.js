@@ -1,4 +1,3 @@
-/** one Tick 100ms */
 import { STATES } from "./consts.js";
 
 const DEFAULT_OPTS = {
@@ -33,13 +32,6 @@ export default class Ball {
         this._config.initialMaxXYSpeed
       )
     });
-
-    /*
-    Matter.Body.applyForce(this._body, this._body.position, {
-      x: 1,
-      y: 1
-    });
-    */
 
     this._tick = 0;
     this.state = STATES.healthy;
@@ -95,20 +87,22 @@ export default class Ball {
       this._tick++;
     }
 
-    //*** this is temporary to be replaced by better algortithm -start- */
-
     if (this.state === STATES.infected) {
-      if (this._tick++ > this._config.cyclesToRecoverOrDie) {
+      if (
+        this._tick++ > this._config.cyclesToRecoverOrDie &&
+        Math.random() > 0.5
+      ) {
         if (Math.random() <= this._config.probInfectionSick) {
           this.state = STATES.sick;
         }
       }
     }
 
-    //*** this is temporary to be replaced by better algortithm -end- */
-
     if (this.state === STATES.sick) {
-      if (this._tick++ > this._config.cyclesToRecoverOrDie) {
+      if (
+        this._tick++ > this._config.cyclesToRecoverOrDie &&
+        Math.random() > 0.5
+      ) {
         this.state =
           Matter.Common.random(0, 1) < this._config.probFatality
             ? STATES.dead
