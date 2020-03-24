@@ -13,8 +13,9 @@ const Engine = Matter.Engine,
 const main = (
   wrapper = document.body,
   config = CONFIG,
-  onUpdate = () => {},
-  onStop = () => {}
+  onUpdate = () => {}, // on Tick
+  onStop = () => {}, // on Stop
+  onCreate = () => {} // on Created
 ) => {
   const balls = [];
   const walls = [];
@@ -32,7 +33,7 @@ const main = (
   engine.world.gravity.y = 0;
 
   const pushSeries = n => {
-    onUpdate({ ...avg, n });
+    onUpdate({ ...avg, n }, balls);
   };
 
   const onChange = () => {
@@ -163,6 +164,7 @@ const main = (
     resize();
     createWalls();
     createBalls();
+    onCreate(balls);
     onChange();
   }
 
@@ -211,12 +213,9 @@ const stats = new Stats(document.getElementById("stats"), CONFIG);
 const app = main(
   document.getElementById("app"),
   CONFIG,
-  series => {
-    stats.update(series);
-  },
-  () => {
-    stop();
-  }
+  (series, balls) => stats.update(series, balls),
+  () => stop(),
+  balls => stats.configure(balls)
 );
 
 const t = timer(100, tick => {
@@ -226,7 +225,6 @@ const t = timer(100, tick => {
 const restart = () => {
   t.restart();
   app.init();
-  stats.configure();
 };
 
 const stop = () => {
