@@ -93,13 +93,16 @@ export const config = {
     probInfectionSick: "Propability that infection will convert to sickness",
     cyclesToRecoverOrDie: "number of cycles to recover or fatal sickness",
     cyclesInterval: "time of each cycle in ms"
+  },
+  sounds: {
+    dead: "../assets/sounds/dead.mp3",
   }
 };
 
 //extend gui
 
 for (const contoller in dat.controllers) {
-  dat.controllers[contoller].prototype.title = function(title) {
+  dat.controllers[contoller].prototype.title = function (title) {
     const titleNode = document.createElement("div");
     titleNode.classList.add("tooltip");
     titleNode.innerText = title;
@@ -206,7 +209,7 @@ export const ConfigGui = (config, onSubmit) => {
 
   //colors dots
   Object.keys(config.colors).forEach(color => {
-    document.getElementById(`dot-${color}`).style.backgroundColor =
+    document.getElementById(`dot-${ color }`).style.backgroundColor =
       config.colors[color];
   });
 

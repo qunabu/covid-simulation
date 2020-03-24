@@ -53,6 +53,7 @@ export default class Ball {
           this._tick = 0;
           break;
         case STATES.dead:
+          new Audio(this._config.sounds[value]).play();
           this.die();
           break;
         default:
