@@ -35,6 +35,11 @@ export default class Ball {
 
     this._tick = 0;
     this.state = STATES.healthy;
+    this._age = age;
+  }
+
+  get age() {
+    return this._age;
   }
 
   get body() {

@@ -10,19 +10,29 @@
 <body>
     <main>
         <div id="stats">
-            <ul>
-                <li><span id="dot-healthy"> </span><span>Healty:</span> <span id="value-healthy"></span>
-                </li>
-                <li><span id="dot-infected"> </span><span>Infected:</span> <span id="value-infected"></span>
-                </li>
-                <li><span id="dot-sick"> </span><span>Sick:</span> <span id="value-sick"></span>
-                </li>
-                <li><span id="dot-recovered"> </span><span>Recovered:</span> <span id="value-recovered"></span>
-                </li>
-                <li><span id="dot-dead"> </span><span>Dead:</span> <span id="value-dead"></span>
-                </li>
-            </ul>
-            <canvas id="chart-time"></canvas>
+            <div class="stats__count">
+                <h2>Count</h2>
+                <ul>
+                    <li><span id="dot-healthy"> </span><span>Healty:</span> <span id="value-healthy"></span>
+                    </li>
+                    <li><span id="dot-infected"> </span><span>Infected:</span> <span id="value-infected"></span>
+                    </li>
+                    <li><span id="dot-sick"> </span><span>Sick:</span> <span id="value-sick"></span>
+                    </li>
+                    <li><span id="dot-recovered"> </span><span>Recovered:</span> <span id="value-recovered"></span>
+                    </li>
+                    <li><span id="dot-dead"> </span><span>Dead:</span> <span id="value-dead"></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="stats__time">
+                <h2>Change over time</h2>
+                <canvas id="chart-time"></canvas>
+            </div>
+            <div class="stats__age">
+                <h2>Population age distrbution</h2>
+                <svg id="chart-ages"></svg>
+            </div>
         </div>
 
         <article id="app"></article>
