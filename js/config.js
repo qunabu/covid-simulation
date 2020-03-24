@@ -19,6 +19,8 @@ export const config = {
   width: Math.round(window.innerWidth / 2), // width of canvas
   height: Math.round(window.innerHeight / 2), // height of canvas
   chartHeight: 80,
+  ageChartWidth: 300,
+  ageChartHeight: 100,
   wall: 1, // wall thickness
   radius: 5, // radius of ball
   amount: Math.round(
@@ -94,10 +96,12 @@ export const config = {
     cyclesToRecoverOrDie: "number of cycles to recover or fatal sickness",
     cyclesInterval: "time of each cycle in ms"
   },
-  simulationLevel: {
-    casual: 0,
-    normal: 1,
-    brutal: 2
+  simulationLevel: 1,
+  casualtip: "Casual - No one washing their hands",
+  normaltip: "Normal - 67,3% of pepole washing hands",
+  brutaltip: "Brutal - Compulsive hand washing",
+  sounds: {
+    dead: "../assets/sounds/dead.mp3"
   }
 };
 
@@ -207,10 +211,13 @@ export const ConfigGui = (config, onSubmit) => {
 
   const f5 = gui.addFolder("Game Difficulty");
   f5.add(config, "simulationLevel", {
-    casual: config.simulationLevel.casual,
-    normal: config.simulationLevel.normal,
-    brutal: config.simulationLevel.brutal
-  });
+    casual: 1,
+    normal: 1.1,
+    brutal: 1.2
+  })
+    .title(config.casualtip)
+    .title(config.normaltip)
+    .title(config.brutaltip);
 
   gui
     .add(actions, "restartOrRedraw")

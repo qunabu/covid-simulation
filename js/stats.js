@@ -13,28 +13,121 @@ export class Stats {
 
   createChart() {
     const width = 600;
-    const height = 80;
 
+    /** time chart  */
     this.canvas = this._wrapper.querySelector("#chart-time");
     this.canvas.setAttribute("width", width);
-    this.canvas.setAttribute("height", height);
+    this.canvas.setAttribute("height", this._config.chartHeight);
     this.context = this.canvas.getContext("2d");
 
     this._keys = ["healthy", "infected", "recovered", "dead", "sick"];
 
-    this.configure();
+    // svg age chart
+    this.svg = this._wrapper.querySelector("#chart-ages");
+    this.svg.setAttribute("width", this._config.ageChartWidth);
+    this.svg.setAttribute("height", this._config.ageChartHeight);
+
+    //y axis
+    const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+
+    [0, 20, 40, 60, 80].forEach(n => {
+      const txt = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "text"
+      );
+      const y = (1 - n / 100) * this._config.ageChartHeight;
+      txt.innerHTML = n.toString();
+      txt.setAttributeNS(null, "x", 1);
+      txt.setAttributeNS(null, "y", y);
+
+      const line = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "line"
+      );
+
+      line.setAttributeNS(null, "x1", 1);
+      line.setAttributeNS(null, "y1", y);
+      line.setAttributeNS(null, "x2", 300);
+      line.setAttributeNS(null, "y2", y);
+      line.setAttributeNS(
+        null,
+        "style",
+        "stroke:rgba(0,0,0,0.1);stroke-width:1"
+      );
+
+      group.appendChild(txt);
+      group.appendChild(line);
+    });
+
+    this.svg.appendChild(group);
   }
 
   configure(balls) {
+    if (this._circles) {
+      this._prevBalls = null;
+      this._circles.forEach(circle => circle.remove());
+      this._circles = null;
+    }
+
+    const marginLeft = 20;
+    const width = this._config.ageChartWidth - marginLeft;
+    const height = this._config.ageChartHeight;
+    const l = balls.length;
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    balls
+      .sort((a, b) => b.age - a.age)
+      .forEach((ball, i) => {
+        const circle = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "circle"
+        );
+        circle.setAttributeNS(
+          null,
+          "cx",
+          marginLeft + Math.round((i / l) * width)
+        );
+        circle.setAttributeNS(
+          null,
+          "cy",
+          Math.round((ball.age / 100) * height)
+        );
+        circle.setAttributeNS(null, "r", 1);
+        const color = this._config.colors[ball.state];
+        circle.setAttributeNS(null, "style", `fill: ${color};`);
+        this.svg.appendChild(circle);
+      });
+
+    this._circles = this.svg.querySelectorAll("circle");
   }
 
-  update(record) {
+  updateBalls(balls) {
+    // map states
+    const states = balls.map((ball, i) => ({
+      state: ball.state,
+      i
+    }));
+    if (this._prevBalls) {
+      /** udpate only changes */
+      states
+        .filter((ball, i) => ball.state !== this._prevBalls[i].state)
+        .forEach(ball => {
+          const color = this._config.colors[ball.state];
+          this._circles[ball.i].setAttributeNS(
+            null,
+            "style",
+            `fill: ${color};`
+          );
+        });
+    }
+    this._prevBalls = states.slice();
+  }
+  update(record, balls) {
     if (this._myReq) {
       window.cancelAnimationFrame(this._myReq);
     }
     this._queue.push(record);
     this._myReq = window.requestAnimationFrame(this.updateVisuals.bind(this));
+    this.updateBalls(balls);
   }
 
   updateVisuals() {
