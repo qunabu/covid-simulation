@@ -94,3 +94,9 @@ aside span {
 #stats li  {
   white-space: nowrap;
 }
+
+#bagde-github {
+  position: absolute;
+  left: 5px;
+  bottom: 5px;
+}
