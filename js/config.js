@@ -248,6 +248,8 @@ export const ConfigGui = (config, onSubmit) => {
       config.colors[color];
   });
 
+  gui.remember(config);
+
   return {
     gui
   };
