@@ -96,7 +96,7 @@ export const config = {
     cyclesToRecoverOrDie: "number of cycles to recover or fatal sickness",
     cyclesInterval: "time of each cycle in ms"
   },
-  simulationLevel: 1,
+  hygieneLevel: 1,
   casualtip: "Casual - No one washing their hands",
   normaltip: "Normal - 67,3% of pepole washing hands",
   brutaltip: "Brutal - Compulsive hand washing",
@@ -209,11 +209,10 @@ export const ConfigGui = (config, onSubmit) => {
     .step(1)
     .title(config.descriptions.cyclesToRecoverOrDie);
 
-  const f5 = gui.addFolder("Game Difficulty");
-  f5.add(config, "simulationLevel", {
-    casual: 1,
-    normal: 1.1,
-    brutal: 1.2
+  f4.add(config, "hygieneLevel", {
+    casual: 1.5,
+    normal: 1,
+    brutal: 0.8
   })
     .title(config.casualtip)
     .title(config.normaltip)

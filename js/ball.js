@@ -118,7 +118,6 @@ export default class Ball {
   }
 
   collide(ballB) {
-    console.log(this._config.simulationLevel);
     if (
       this.state === STATES.healthy &&
       (ballB.state === STATES.infected || ballB.state === STATES.sick)
@@ -126,7 +125,7 @@ export default class Ball {
       /** TODO probability of sicknes, based on age */
       if (
         Math.random() <
-        this._config.probInfection * this._config.simulationLevel
+        this._config.probInfection * this._config.hygieneLevel
       ) {
         this.state = STATES.infected;
       }
