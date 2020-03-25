@@ -30,7 +30,6 @@ const main = (
   const engine = Engine.create();
 
   engine.world.gravity.y = 0;
-  engine.world.gravity.y = 0;
 
   const pushSeries = n => {
     onUpdate({ ...avg, n }, balls);
