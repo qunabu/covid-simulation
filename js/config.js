@@ -43,6 +43,7 @@ export const config = {
   distrAge69: 0.13,
   distrAge79: 0.03,
   distrAge100: 0.02,
+
   // fatality rate
   probFatality: 0.02, // probability of fatality
   fatalAge9: 0.00002,
@@ -115,7 +116,7 @@ export const config = {
 //extend gui
 
 for (const contoller in dat.controllers) {
-  dat.controllers[contoller].prototype.title = function(title) {
+  dat.controllers[contoller].prototype.title = function (title) {
     const titleNode = document.createElement("div");
     titleNode.classList.add("tooltip");
     titleNode.innerText = title;
@@ -139,35 +140,85 @@ export const ConfigGui = (config, onSubmit) => {
   f1.add(config, "cyclesInterval", 100, 1000)
     .step(100)
     .title(config.descriptions.cyclesInterval);
-
+  let min = 0;
+  let max = 1;
+  let x = {max: 1}
   const f2 = gui.addFolder("Age Distribution");
-  f2.add(config, "distrAge9", 0, 1)
-    .step(0.01)
-    .title(config.descriptions.distrAge9);
-  f2.add(config, "distrAge19", 0, 1)
-    .step(0.01)
-    .title(config.descriptions.distrAge19);
-  f2.add(config, "distrAge29", 0, 1)
-    .step(0.01)
-    .title(config.descriptions.distrAge29);
-  f2.add(config, "distrAge39", 0, 1)
-    .step(0.01)
-    .title(config.descriptions.distrAge39);
-  f2.add(config, "distrAge49", 0, 1)
-    .step(0.01)
-    .title(config.descriptions.distrAge49);
-  f2.add(config, "distrAge59", 0, 1)
-    .step(0.01)
-    .title(config.descriptions.distrAge59);
-  f2.add(config, "distrAge69", 0, 1)
-    .step(0.01)
-    .title(config.descriptions.distrAge69);
-  f2.add(config, "distrAge79", 0, 1)
-    .step(0.01)
-    .title(config.descriptions.distrAge79);
-  f2.add(config, "distrAge100", 0, 1)
-    .step(0.01)
-    .title(config.descriptions.distrAge100);
+  f2.add(config, "distrAge9", min, x.max, 0.01)
+    .title(config.descriptions.distrAge9).listen().onFinishChange((val) => onSetDistrAgesValues(0, val));
+
+  f2.add(config, "distrAge19", min, max, 0.01)
+    .title(config.descriptions.distrAge19).listen().onFinishChange((val) => onSetDistrAgesValues(1, val));
+
+  f2.add(config, "distrAge29", min, max, 0.01)
+    .title(config.descriptions.distrAge29).listen().onFinishChange((val) => onSetDistrAgesValues(2, val));
+
+  f2.add(config, "distrAge39", min, max, 0.01)
+    .title(config.descriptions.distrAge39).listen().onFinishChange((val) => onSetDistrAgesValues(3, val));
+
+  f2.add(config, "distrAge49", min, max, 0.01)
+    .title(config.descriptions.distrAge49).listen().onFinishChange((val) => onSetDistrAgesValues(4, val));
+
+  f2.add(config, "distrAge59", min, max, 0.01)
+    .title(config.descriptions.distrAge59).listen().onFinishChange((val) => onSetDistrAgesValues(5, val));
+
+  f2.add(config, "distrAge69", min, max, 0.01)
+    .title(config.descriptions.distrAge69).listen().onFinishChange((val) => onSetDistrAgesValues(6, val));
+
+  f2.add(config, "distrAge79", min, max, 0.01)
+    .title(config.descriptions.distrAge79).listen().onFinishChange((val) => onSetDistrAgesValues(7, val));
+
+  f2.add(config, "distrAge100", min, max, 0.01)
+    .title(config.descriptions.distrAge100).listen().onFinishChange((val) => onSetDistrAgesValues(8, val));
+
+
+  const getSum = (index) => {
+    let sum = 0;
+    f2.__controllers.forEach((e, row) => {
+      if (index !== row) {
+        sum += f2.__controllers[row].object[Object.keys(AGES)[row]];
+      }
+    });
+    return sum;
+  }
+
+
+  const onSetDistrAgesValues = (index, value) => {
+    if (getSum(index) + value > 1) {
+      const elements = Object.keys(AGES);
+      let allElements = elements.length - 1
+      let overplus = (getSum(index) + value) - 1;
+      let valueForEachElement = overplus / allElements;
+
+      f2.__controllers.forEach((e, row) => {
+        const currentItemValue = f2.__controllers[row].object[elements[row]];
+        if (index !== row) {
+          if (currentItemValue - valueForEachElement < 0) {
+            valueForEachElement += ((valueForEachElement - currentItemValue) / (allElements - 1));
+            allElements--;
+            e.setValue(0)
+          }
+          else if (currentItemValue - valueForEachElement > 0) {
+            e.setValue(currentItemValue - valueForEachElement)
+          }
+        }
+      });
+    }
+
+    else if (getSum(index) + value < 1) {
+      const elements = Object.keys(AGES);
+      let allElements = elements.length - 1;
+      let overplus = 1 - (getSum(index) + value);
+      let valueForEachElement = overplus / allElements;
+
+      f2.__controllers.forEach((e, row) => {
+        let currentItemValue = f2.__controllers[row].object[Object.keys(AGES)[row]];
+        if (index !== row) {
+          e.setValue(currentItemValue + valueForEachElement)
+        }
+      })
+    }
+  }
 
   const f3 = gui.addFolder("Fatality Ratio");
   f3.add(config, "fatalAge9", 0, 1)
@@ -244,7 +295,7 @@ export const ConfigGui = (config, onSubmit) => {
 
   //colors dots
   Object.keys(config.colors).forEach(color => {
-    document.getElementById(`dot-${color}`).style.backgroundColor =
+    document.getElementById(`dot-${ color }`).style.backgroundColor =
       config.colors[color];
   });
 
