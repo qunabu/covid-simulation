@@ -1,4 +1,6 @@
 import { STATES } from "./consts.js";
+import { AGES } from "./config.js";
+import { getAgeRangeKeyByAge } from "./utils.js";
 
 const DEFAULT_OPTS = {
   frictionAir: 0,
@@ -12,6 +14,8 @@ const DEFAULT_OPTS = {
 export default class Ball {
   constructor(x, y, age = 15, config) {
     this._config = config;
+
+    // physiscs
     this._body = Matter.Bodies.circle(x, y, 5, {
       ...DEFAULT_OPTS,
       render: {
@@ -33,9 +37,34 @@ export default class Ball {
       )
     });
 
+    // initial states
     this._tick = 0;
     this.state = STATES.healthy;
     this._age = age;
+    this._notMoving = false;
+
+    this._probFatality =
+      config[getAgeRangeKeyByAge(AGES)(age).replace("distr", "fatal")];
+  }
+
+  set notMoving(value) {
+    Matter.Body.setVelocity(this.body, {
+      x: value
+        ? 0
+        : Matter.Common.random(
+            -this._config.initialMaxXYSpeed,
+            this._config.initialMaxXYSpeed
+          ),
+      y: value
+        ? 0
+        : Matter.Common.random(
+            -this._config.initialMaxXYSpeed,
+            this._config.initialMaxXYSpeed
+          )
+    });
+    Matter.Body.setMass(this.body, value ? Infinity : DEFAULT_OPTS.mass);
+
+    this._notMoving = value;
   }
 
   get age() {
@@ -81,11 +110,7 @@ export default class Ball {
   }
 
   die() {
-    Matter.Body.setVelocity(this.body, {
-      x: 0,
-      y: 0
-    });
-    Matter.Body.setMass(this.body, Infinity);
+    this.notMoving = true;
   }
 
   tick() {
@@ -96,7 +121,7 @@ export default class Ball {
     if (this.state === STATES.infected) {
       if (
         this._tick++ > this._config.cyclesToRecoverOrDie &&
-        Math.random() > 0.5
+        Math.random() > 0.8
       ) {
         if (Math.random() <= this._config.probInfectionSick) {
           this.state = STATES.sick;
@@ -107,10 +132,10 @@ export default class Ball {
     if (this.state === STATES.sick) {
       if (
         this._tick++ > this._config.cyclesToRecoverOrDie &&
-        Math.random() > 0.5
+        Math.random() > 0.8
       ) {
         this.state =
-          Matter.Common.random(0, 1) < this._config.probFatality
+          Matter.Common.random(0, 1) < this._probFatality
             ? STATES.dead
             : STATES.recovered;
       }

@@ -28,7 +28,7 @@ export const config = {
       (window.innerWidth / (2 * 2.5)) * (window.innerHeight / (2 * 2.5))
     )
   ), // amount of balls on enter
-  percInfected: 0.03, // percetage of initialy infected
+  percInfected: 0.02, // percetage of initialy infected
   probInfection: 0.8, // propability that one ball will infect another in case of collision
   // distribution of age in population
   probInfectionSick: 0.9, // propability that infection will convert to sickness
@@ -94,15 +94,21 @@ export const config = {
       "Propability that one ball will infect another in case of collision",
     probInfectionSick: "Propability that infection will convert to sickness",
     cyclesToRecoverOrDie: "number of cycles to recover or fatal sickness",
-    cyclesInterval: "time of each cycle in ms"
+    cyclesInterval: "time of each cycle in ms",
+    casualtip: "Casual - No one washing their hands",
+    normaltip: "Normal - 67,3% of pepole washing hands",
+    brutaltip: "Brutal - Compulsive hand washing",
+    quarantineWalls: "number of walls",
+    quarantineNotMove: "Percentage of balls that are not moving",
+    quarantineWallOpen: "Does wall do open after some time"
   },
   hygieneLevel: 1,
-  casualtip: "Casual - No one washing their hands",
-  normaltip: "Normal - 67,3% of pepole washing hands",
-  brutaltip: "Brutal - Compulsive hand washing",
   sounds: {
     dead: "../assets/sounds/dead.mp3"
-  }
+  },
+  quarantineWalls: 1,
+  quarantineWallOpen: true,
+  quarantineNotMove: 0.2
 };
 
 //extend gui
@@ -214,9 +220,22 @@ export const ConfigGui = (config, onSubmit) => {
     normal: 1,
     brutal: 0.8
   })
-    .title(config.casualtip)
-    .title(config.normaltip)
-    .title(config.brutaltip);
+    .title(config.descriptions.casualtip)
+    .title(config.descriptions.normaltip)
+    .title(config.descriptions.brutaltip);
+
+  const f5 = gui.addFolder("Quarantine");
+  f5.add(config, "quarantineWalls", 0, 5)
+    .step(1)
+    .title(config.descriptions.quarantineWalls);
+
+  f5.add(config, "quarantineWallOpen", 0, 1).title(
+    config.descriptions.quarantineWallOpen
+  );
+
+  f5.add(config, "quarantineNotMove", 0, 1)
+    .step(0.001)
+    .title(config.descriptions.quarantineNotMove);
 
   gui
     .add(actions, "restartOrRedraw")
@@ -227,6 +246,8 @@ export const ConfigGui = (config, onSubmit) => {
     document.getElementById(`dot-${color}`).style.backgroundColor =
       config.colors[color];
   });
+
+  gui.remember(config);
 
   return {
     gui

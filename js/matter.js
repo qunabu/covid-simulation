@@ -1,8 +1,7 @@
 import "./../assets/matter.min.js";
 import Ball from "./ball.js";
-import { config as CONFIG, ConfigGui, AGES } from "./config.js";
-import { Stats } from "./stats.js";
-import { getRandomAge, getAgeRangeKeyByAge, timer } from "./utils.js";
+import { config as CONFIG, AGES } from "./config.js";
+import { getRandomAge, getAgeRangeKeyByAge } from "./utils.js";
 import { STATES } from "./consts.js";
 
 const Engine = Matter.Engine,
@@ -10,7 +9,7 @@ const Engine = Matter.Engine,
   World = Matter.World,
   Bodies = Matter.Bodies;
 
-const main = (
+export const main = (
   wrapper = document.body,
   config = CONFIG,
   onUpdate = () => {}, // on Tick
@@ -19,6 +18,7 @@ const main = (
 ) => {
   const balls = [];
   const walls = [];
+  const qWalls = [];
   let avg = {
     healthy: 0,
     sick: 0,
@@ -77,6 +77,10 @@ const main = (
       World.remove(engine.world, walls.pop());
     }
 
+    while (qWalls.length) {
+      World.remove(engine.world, qWalls.pop());
+    }
+
     const wall_bottom = Bodies.rectangle(
       config.width / 2,
       config.height,
@@ -111,7 +115,28 @@ const main = (
     walls.push(wall_left);
     walls.push(wall_right);
 
+    /** quarantine options  */
+
+    //const qWidth = 1 * (Math.hypot(config.width, config.height) / 2);
+    //const angle = Math.atan(config.height / config.width);
+
+    const height = config.height * 1;
+    const step = config.width / (config.quarantineWalls + 1);
+
+    for (let i = 1; i <= config.quarantineWalls; i++) {
+      const qWall = Bodies.rectangle(
+        i * step,
+        config.height / 2,
+        1,
+        height,
+        wall_opts
+      );
+
+      qWalls.push(qWall);
+    }
+
     World.add(engine.world, walls);
+    World.add(engine.world, qWalls);
   };
 
   const createBalls = () => {
@@ -132,15 +157,16 @@ const main = (
         Matter.Common.random(config.wall * 3, config.width - config.wall * 3),
         Matter.Common.random(config.wall * 3, config.height - config.wall * 3),
         age,
-        {
-          ...config,
-          probFatality:
-            config[getAgeRangeKeyByAge(AGES)(age).replace("distr", "fatal")]
-        }
+        config
       );
 
       if (i < infected) {
         ball.state = STATES.infected;
+      } else {
+        // initial infected are always moving
+        if (Math.random() < config.quarantineNotMove) {
+          ball.notMoving = true;
+        }
       }
 
       ball.onChange = onChange;
@@ -185,6 +211,9 @@ const main = (
 
   const tick = i => {
     balls.forEach(ball => ball.tick(i));
+    config.quarantineWallOpen &&
+      i > 100 &&
+      qWalls.forEach(qWall => Matter.Body.scale(qWall, 1, 0.998));
     pushSeries(i);
   };
 
@@ -206,33 +235,3 @@ const main = (
     stop
   };
 };
-
-const stats = new Stats(document.getElementById("stats"), CONFIG);
-
-const app = main(
-  document.getElementById("app"),
-  CONFIG,
-  (series, balls) => stats.update(series, balls),
-  () => stop(),
-  balls => stats.configure(balls)
-);
-
-const t = timer(100, tick => {
-  app.tick(tick);
-});
-
-const restart = () => {
-  t.restart();
-  app.init();
-};
-
-const stop = () => {
-  t.stop();
-  //app.stop();
-};
-
-ConfigGui(CONFIG, () => {
-  restart();
-});
-
-window.addEventListener("keyup", e => e.which === 80 && stop());
