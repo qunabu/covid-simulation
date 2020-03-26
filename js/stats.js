@@ -144,6 +144,8 @@ export class Stats {
     let record;
     let y = 0;
 
+    const hospY = Math.round(chartHeight * (1 - this._config.hospLvl));
+
     while ((record = this._queue.shift())) {
       y = 0;
       this._keys.forEach(key => {
@@ -158,6 +160,11 @@ export class Stats {
 
         this.context.fillStyle = obj.fill;
         this.context.fillRect(obj.x, obj.y, obj.width, obj.height);
+
+        this.context.fillStyle = "#6ff542";
+        this.context.fillRect(obj.x, hospY, 1, 1);
+
+        /** hosp */
         y += height;
       });
     }
