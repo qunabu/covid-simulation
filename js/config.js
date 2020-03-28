@@ -1,5 +1,5 @@
 import * as dat from "../assets/dat.gui.module.js";
-
+import { urlParams2obj } from "./utils.js";
 export const AGES = {
   distrAge9: [0, 9],
   distrAge19: [10, 19],
@@ -12,7 +12,7 @@ export const AGES = {
   distrAge100: [80, 100]
 };
 
-export const config = {
+export const defaultConfig = {
   speedMultiplier: 2, // on collision fix
   initialMaxXYSpeed: 2, // on inital max x,y speed
   minimalXYSpeed: 0.3, // minimal speed of x,y
@@ -103,7 +103,6 @@ export const config = {
     quarantineWallOpen: "Does wall do open after some time"
   },
   hygieneLevel: 1,
-
   sounds: {
     dead: "../assets/sounds/dead.mp3"
   },
@@ -124,6 +123,18 @@ for (const contoller in dat.controllers) {
     return this;
   };
 }
+
+// default settings
+
+console.log(urlParams2obj(window.location.search));
+
+export const config = Object.assign(
+  {},
+  defaultConfig,
+  urlParams2obj(window.location.search)
+);
+
+console.log("config", config);
 
 export const ConfigGui = (config, onSubmit) => {
   const actions = {
