@@ -140,11 +140,12 @@ export const ConfigGui = (config, onSubmit) => {
   f1.add(config, "cyclesInterval", 100, 1000)
     .step(100)
     .title(config.descriptions.cyclesInterval);
+
   let min = 0;
   let max = 1;
-  let x = {max: 1}
+
   const f2 = gui.addFolder("Age Distribution");
-  f2.add(config, "distrAge9", min, x.max, 0.01)
+  f2.add(config, "distrAge9", min, max, 0.01)
     .title(config.descriptions.distrAge9).listen().onFinishChange((val) => onSetDistrAgesValues(0, val));
 
   f2.add(config, "distrAge19", min, max, 0.01)
