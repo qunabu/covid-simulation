@@ -65,6 +65,7 @@ h2 {
 }
 
 main {
+  position: relative;
 }
 
 aside span {
@@ -174,3 +175,35 @@ body.iframe #stats .stats__age {
 
 #sharer-tip{ text-align: center; margin: 3px; font-size: 12px; }
 #sharer-tip:empty { display: none;}
+
+#app { position: relative; }
+#app canvas { display: block; }
+#btn-restart {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.7);
+  border: 0;
+  padding: 0;
+  display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+  align-content: center;
+  cursor: pointer;
+  transition: opacity 0.5s ;
+  visibility: hidden;
+}
+#btn-restart:hover { 
+  opacity: 0.7;
+}
+
+#btn-restart svg { width: 30px;}
+
+body.restart #btn-restart { visibility: visible; }
+
+.a-open { position: absolute; left: 5px; bottom: 5px; color: #222; font-size: 11px; display: none;}
+body.iframe .a-open { display: block; }

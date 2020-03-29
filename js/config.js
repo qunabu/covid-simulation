@@ -126,15 +126,11 @@ for (const contoller in dat.controllers) {
 
 // default settings
 
-console.log(urlParams2obj(window.location.search));
-
 export const config = Object.assign(
   {},
   defaultConfig,
   urlParams2obj(window.location.search)
 );
-
-console.log("config", config);
 
 export const ConfigGui = (config, onSubmit) => {
   const actions = {
