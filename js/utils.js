@@ -68,3 +68,32 @@ const isInRange = ([min, max]) => value => value >= min && value <= max;
  */
 export const getAgeRangeKeyByAge = ageRanges => age =>
   Object.keys(ageRanges).find(rangeKey => isInRange(ageRanges[rangeKey])(age));
+
+export const diff = (obj1, obj2) =>
+  Object.keys(obj1).reduce(
+    (acc, curr) =>
+      obj1[curr] !== obj2[curr]
+        ? {
+            ...acc,
+            [curr]: obj1[curr]
+          }
+        : acc,
+    {}
+  );
+
+export const obj2urlParams = obj =>
+  Object.keys(obj)
+    .map(key => `${key}=${obj[key]}`)
+    .join("&");
+
+export const urlParams2obj = url => {
+  const i = url.indexOf("?");
+  const search = i === -1 ? url : url.substr(url.indexOf("?") + 1);
+  return search.split("&").reduce((acc, curr) => {
+    const a = curr.split("=");
+    return {
+      ...acc,
+      [a[0]]: Number.isNaN(Number(a[1])) ? a[1] : Number(a[1])
+    };
+  }, {});
+};
