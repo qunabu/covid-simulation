@@ -153,6 +153,7 @@ aside span {
   margin: 0px 0 5px ;
 }
 
+body.iframe { overflow: hidden;}
 body.iframe #bagde-github,
 body.iframe .dg.ac,
 body.iframe #__ybug-launcher,

@@ -23,7 +23,7 @@ const urlOpts = () => {
     .getElementById("sharer")
     .querySelector(
       "textarea"
-    ).value = `<iframe src="${window.location.href}" width="${width}" height="${height}"></iframe>`;
+    ).value = `<iframe src="${window.location.href}&iframe=1" width="${width}" height="${height}"></iframe>`;
 };
 
 const app = main(
