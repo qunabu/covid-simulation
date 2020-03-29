@@ -25,13 +25,9 @@ const urlOpts = () => {
       "textarea"
     ).value = `<iframe src="${window.location.href}&iframe=1" width="${width}" height="${height}"></iframe>`;
 
-  /*
   document.querySelector(".a-open").href = window.location.href.split(
     "&iframe=1"
   )[0];
-
-  document.querySelector(".a-open").href = "https://onet.pl";
-  */
 };
 
 const app = main(
