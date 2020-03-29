@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>covid-19</title>
+    <link rel="stylesheet" type="text/css" href="assets/style.css" />
+</head>
+
+<body>
+    <main>
+        <div id="stats">
+            <div class="stats__count">
+                <h2>Count</h2>
+                <ul>
+                    <li><span id="dot-healthy"> </span><span>Healty:</span> <span id="value-healthy"></span>
+                    </li>
+                    <li><span id="dot-infected"> </span><span>Infected:</span> <span id="value-infected"></span>
+                    </li>
+                    <li><span id="dot-sick"> </span><span>Sick:</span> <span id="value-sick"></span>
+                    </li>
+                    <li><span id="dot-recovered"> </span><span>Recovered:</span> <span id="value-recovered"></span>
+                    </li>
+                    <li><span id="dot-dead"> </span><span>Dead:</span> <span id="value-dead"></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="stats__time">
+                <h2>Change over time</h2>
+                <canvas id="chart-time"></canvas>
+            </div>
+            <div class="stats__age">
+                <h2>Population age distrbution</h2>
+                <svg id="chart-ages"></svg>
+            </div>
+        </div>
+
+        <article id="app">
+            <button id="btn-restart">
+                <span>Restart</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.155 14.155">
+                    <path
+                        d="M12.083 1.887A7.054 7.054 0 009.356.19v2.135c.48.239.935.55 1.334.95a5.118 5.118 0 010 7.229 5.123 5.123 0 01-7.229 0 5.121 5.121 0 010-7.229c.005-.006.021-.016.028-.025h.002l1.181 1.179L4.665.685.923.68l1.176 1.176a.118.118 0 01-.027.031 7.078 7.078 0 1010.011 0z"
+                        fill="#030104" />
+                </svg>
+            </button>
+            <a class="a-open" href="" target="_blank">Open in editor</a>
+        </article>
+       
+
+    </main>
+
+    <div id="sharer">
+        <p id="sharer-tip">Copy this code to embed current simulator on your page </p>
+        <textarea readonly cols="1"></textarea>
+    </div>
+
+    <div id="bagde-github">
+        <a class="github-button" href="https://github.com/qunabu/covid-simulation/fork" data-icon="octicon-repo-forked"
+            aria-label="Fork qunabu/covid-simulation on GitHub">Fork</a>
+        <a class="github-button" href="https://github.com/qunabu/covid-simulation" data-icon="octicon-star"
+            aria-label="Star qunabu/covid-simulation on GitHub">Star</a>
+        <script async defer src="https://buttons.github.io/buttons.js"></script>
+    </div>
+    
+
+    <!-- Ybug code -->
+    <script type='text/javascript'>
+        (function () {
+            window.ybug_settings = {
+                "id": "5ymranqjnv"
+            };
+            var ybug = document.createElement('script');
+            ybug.type = 'text/javascript';
+            ybug.async = true;
+            ybug.src = 'https://widget.ybug.io/button/' + window.ybug_settings.id + '.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ybug, s);
+        })();
+    </script>
+    <!-- Ybug code end -->
+
+    <script src="main.js"></script>
+
+
+</body>
+
+</html>
