@@ -17,7 +17,7 @@ const urlOpts = () => {
   history.pushState(changes, document.title, "?" + obj2urlParams(changes));
 
   const height = changes.height + 140; // app + stats
-  const width = changes.width < 1040 ? 1040 : changes.width;
+  const width = changes.width < 1050 ? 1050 : changes.width;
 
   document
     .getElementById("sharer")
