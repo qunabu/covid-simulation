@@ -133,10 +133,15 @@ export class Stats {
   updateVisuals() {
     const lastRecord = this._queue[this._queue.length - 1];
     if (lastRecord) {
-      this._keys.forEach(
-        key =>
-          (document.getElementById(`value-${key}`).innerText = lastRecord[key])
-      );
+      this._keys.forEach(key => {
+        if (key === "sick") {
+          document.getElementById(
+            `value-${key}`
+          ).innerText = `${lastRecord[key]} (H: ${lastRecord.hospitalized})`;
+        } else {
+          document.getElementById(`value-${key}`).innerText = lastRecord[key];
+        }
+      });
     }
 
     const chartHeight = this._config.chartHeight;
@@ -149,7 +154,7 @@ export class Stats {
     while ((record = this._queue.shift())) {
       y = 0;
       this._keys.forEach(key => {
-        const height = Math.round((record[key] / total) * chartHeight);
+        const height = Math.ceil((record[key] / total) * chartHeight);
         const obj = {
           x: record.n,
           y: y,
@@ -161,10 +166,21 @@ export class Stats {
         this.context.fillStyle = obj.fill;
         this.context.fillRect(obj.x, obj.y, obj.width, obj.height);
 
+        if (key === "sick") {
+          this.context.fillStyle = this._config.colors.hospitalized;
+          const hHeight = obj.height * (record.hospitalized / record.sick);
+          this.context.fillRect(
+            obj.x,
+            obj.y + (obj.height - hHeight),
+            obj.width,
+            obj.height * (record.hospitalized / record.sick)
+          );
+        }
+
+        /** hospLvl line */
         this.context.fillStyle = "#6ff542";
         this.context.fillRect(obj.x, hospY, 1, 1);
 
-        /** hosp */
         y += height;
       });
     }

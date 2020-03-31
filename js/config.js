@@ -67,6 +67,7 @@ export const config = {
     healthy: "#AAC6CA",
     infected: "#FFBA49",
     sick: "#ED2A10",
+    hospitalized: "#851809",
     recovered: "#CB8AC0",
     dead: "#000000"
   },
@@ -121,7 +122,7 @@ export const config = {
     hospiAge79: "Age 70-79 % requiring critial hospitalisation",
     hospiAge10: "Age 80-89 % requiring critial hospitalisation"
   },
-  hospLvl: 0.2,
+  hospLvl: 0.1,
   hygieneLevel: 1,
   sounds: {
     dead: "../assets/sounds/dead.mp3"
