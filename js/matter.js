@@ -1,5 +1,5 @@
 import "./../assets/matter.min.js";
-import Ball from "./ball.js";
+import Ball, { Hospitalization } from "./ball.js";
 import { config as CONFIG, AGES } from "./config.js";
 import { getRandomAge, getAgeRangeKeyByAge } from "./utils.js";
 import { STATES } from "./consts.js";
@@ -39,14 +39,16 @@ export const main = (
     avg = balls.reduce(
       (acc, curr) => ({
         ...acc,
-        [curr.state]: acc[curr.state] + 1
+        [curr.state]: acc[curr.state] + 1,
+        hospitalized: acc.hospitalized + (curr.hospitalised ? 1 : 0)
       }),
       {
         healthy: 0,
         sick: 0,
         recovered: 0,
         dead: 0,
-        infected: 0
+        infected: 0,
+        hospitalized: 0
       }
     );
 
@@ -215,6 +217,7 @@ export const main = (
       i > 100 &&
       qWalls.forEach(qWall => Matter.Body.scale(qWall, 1, 0.998));
     pushSeries(i);
+    Hospitalization.update(avg.hospitalized / balls.length);
   };
 
   const stop = () => {

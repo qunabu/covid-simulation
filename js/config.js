@@ -55,10 +55,20 @@ export const defaultConfig = {
   fatalAge69: 0.022,
   fatalAge79: 0.051,
   fatalAge100: 0.093,
+  hospiAge9: 0.05,
+  hospiAge19: 0.05,
+  hospiAge29: 0.05,
+  hospiAge39: 0.05,
+  hospiAge49: 0.063,
+  hospiAge59: 0.122,
+  hospiAge69: 0.274,
+  hospiAge79: 0.432,
+  hospiAge100: 0.709,
   colors: {
     healthy: "#AAC6CA",
     infected: "#FFBA49",
     sick: "#ED2A10",
+    hospitalized: "#851809",
     recovered: "#CB8AC0",
     dead: "#000000"
   },
@@ -101,8 +111,19 @@ export const defaultConfig = {
     brutaltip: "Brutal - Compulsive hand washing",
     quarantineWalls: "number of walls",
     quarantineNotMove: "Percentage of balls that are not moving",
-    quarantineWallOpen: "Does wall do open after some time"
+    quarantineWallOpen: "Does wall do open after some time",
+    hospLvl: "Maximal level of hospitalisation for population",
+    hospiAge9: "Age 0-9 % requiring critial hospitalisation",
+    hospiAge19: "Age 10-19 % requiring critial hospitalisation",
+    hospiAge29: "Age 20-29 % requiring critial hospitalisation",
+    hospiAge39: "Age 30-39 % requiring critial hospitalisation",
+    hospiAge49: "Age 40-49 % requiring critial hospitalisation",
+    hospiAge59: "Age 50-59 % requiring critial hospitalisation",
+    hospiAge69: "Age 60-69 % requiring critial hospitalisation",
+    hospiAge79: "Age 70-79 % requiring critial hospitalisation",
+    hospiAge10: "Age 80-89 % requiring critial hospitalisation"
   },
+  hospLvl: 0.1,
   hygieneLevel: 1,
   sounds: {
     dead: "../assets/sounds/dead.mp3"
@@ -296,6 +317,39 @@ export const ConfigGui = (config, onSubmit) => {
   f5.add(config, "quarantineNotMove", 0, 1)
     .step(0.001)
     .title(config.descriptions.quarantineNotMove);
+
+  const f6 = gui.addFolder("Hospitalisation");
+  f6.add(config, "hospLvl", 0, 1)
+    .step(0.01)
+    .title(config.descriptions.hospLvl);
+
+  f6.add(config, "hospiAge9", 0, 1)
+    .step(0.001)
+    .title(config.descriptions.hospiAge9);
+  f6.add(config, "hospiAge19", 0, 1)
+    .step(0.001)
+    .title(config.descriptions.hospiAge19);
+  f6.add(config, "hospiAge29", 0, 1)
+    .step(0.001)
+    .title(config.descriptions.hospiAge29);
+  f6.add(config, "hospiAge39", 0, 1)
+    .step(0.001)
+    .title(config.descriptions.hospiAge39);
+  f6.add(config, "hospiAge49", 0, 1)
+    .step(0.001)
+    .title(config.descriptions.hospiAge49);
+  f6.add(config, "hospiAge59", 0, 1)
+    .step(0.001)
+    .title(config.descriptions.hospiAge59);
+  f6.add(config, "hospiAge69", 0, 1)
+    .step(0.001)
+    .title(config.descriptions.hospiAge69);
+  f6.add(config, "hospiAge79", 0, 1)
+    .step(0.001)
+    .title(config.descriptions.hospiAge79);
+  f6.add(config, "hospiAge100", 0, 1)
+    .step(0.001)
+    .title(config.descriptions.hospiAge100);
 
   gui
     .add(actions, "restartOrRedraw")

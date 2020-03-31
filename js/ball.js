@@ -11,6 +11,17 @@ const DEFAULT_OPTS = {
   mass: 1000
 };
 
+export const Hospitalization = {
+  _perc: 0,
+  get perc() {
+    return this._perc;
+  },
+  update: function(value) {
+    this._perc = value;
+    return this;
+  }
+};
+
 export default class Ball {
   constructor(x, y, age = 15, config) {
     this._config = config;
@@ -43,8 +54,21 @@ export default class Ball {
     this._age = age;
     this._notMoving = false;
 
+    this._hospitalised = false;
+
     this._probFatality =
       config[getAgeRangeKeyByAge(AGES)(age).replace("distr", "fatal")];
+
+    this._reqHospi =
+      config[getAgeRangeKeyByAge(AGES)(age).replace("distr", "hospi")];
+  }
+
+  get hospitalised() {
+    return this._hospitalised;
+  }
+
+  set hospitalised(value) {
+    this._hospitalised = value;
   }
 
   set notMoving(value) {
@@ -125,19 +149,32 @@ export default class Ball {
       ) {
         if (Math.random() <= this._config.probInfectionSick) {
           this.state = STATES.sick;
+          // TODO calculations
+
+          // this.hospitalised = true;
         }
       }
     }
 
     if (this.state === STATES.sick) {
+      // some time to get the sickness evolve
+      if (Math.random() > 0.8) {
+        if (!this.hospitalised && Math.random() < this._reqHospi) {
+          if (Hospitalization.perc < this._config.hospLvl) {
+            this.hospitalised = true;
+          }
+        }
+      }
+
       if (
         this._tick++ > this._config.cyclesToRecoverOrDie &&
         Math.random() > 0.8
       ) {
         this.state =
-          Matter.Common.random(0, 1) < this._probFatality
+          Math.random() < this._probFatality * (this.hospitalised ? 1 : 2)
             ? STATES.dead
             : STATES.recovered;
+        this.hospitalised = false;
       }
     }
   }
