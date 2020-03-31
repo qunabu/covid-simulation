@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=PT+Sans:400,700&display=swap");
 
 * {
-  font-family: "PT Sans", sans-serif;
+  font-family: 'PT Sans', sans-serif;
 }
 html,
 body {
@@ -26,7 +26,7 @@ h2 {
   -moz-osx-font-smoothing: grayscale;
   font-size: 14px;
   font-weight: bold;
-  color: #222;
+  color:#222;
   margin: 0;
   margin-bottom: 5px;
   padding: 0;
@@ -82,18 +82,6 @@ aside span {
   overflow: hidden;
   display: inline-block;
 }
-#dot-hospitalized {
-  margin-left: 0;
-}
-#line-hospitalized {
-  border-bottom: 1px solid #6ff542;
-  margin-left: 5px;
-  margin-right: 5px;
-  width: 10px;
-  height: 1px;
-  display: inline-block;
-  vertical-align: middle;
-}
 
 #stats {
   position: absolute;
@@ -119,7 +107,7 @@ aside span {
 }
 #stats li {
   white-space: nowrap;
-  margin-bottom: 0spx;
+  margin-bottom: 3px;
 }
 
 .stats__count {

@@ -3,8 +3,20 @@
 
 <head>
     <meta charset="utf-8">
-    <title>covid-19</title>
+    <title>Pandemia simulation</title>
     <link rel="stylesheet" type="text/css" href="assets/style.css" />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162313126-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-162313126-1');
+    </script>
 </head>
 
 <body>
@@ -17,13 +29,11 @@
                     </li>
                     <li><span id="dot-infected"> </span><span>Infected:</span> <span id="value-infected"></span>
                     </li>
-                    <li><span id="dot-sick"> </span><span id="dot-hospitalized"> </span><span>Sick:</span> <span id="value-sick"></span>
+                    <li><span id="dot-sick"> </span><span>Sick:</span> <span id="value-sick"></span>
                     </li>
                     <li><span id="dot-recovered"> </span><span>Recovered:</span> <span id="value-recovered"></span>
                     </li>
                     <li><span id="dot-dead"> </span><span>Dead:</span> <span id="value-dead"></span>
-                    </li>
-                    <li><span id="line-hospitalized"> </span><span>Max lvl hospital.</span>
                     </li>
                 </ul>
             </div>
@@ -48,10 +58,9 @@
             </button>
             <a class="a-open" href="" target="_blank">Open in editor</a>
         </article>
-       
+
 
     </main>
-    <script type="module" src="js/app.js"></script>
 
     <div id="sharer">
         <p id="sharer-tip">Copy this code to embed current simulator on your page </p>
@@ -65,6 +74,7 @@
             aria-label="Star qunabu/covid-simulation on GitHub">Star</a>
         <script async defer src="https://buttons.github.io/buttons.js"></script>
     </div>
+
 
     <!-- Ybug code -->
     <script type='text/javascript'>
@@ -81,6 +91,9 @@
         })();
     </script>
     <!-- Ybug code end -->
+
+    <script src="main.js"></script>
+
 
 </body>
 

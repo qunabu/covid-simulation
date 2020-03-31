@@ -64,7 +64,7 @@ export const main = (
       width: config.width,
       height: config.height,
       wireframes: false,
-      background: "#ddd"
+      background: "#efefef"
     }
   });
 
