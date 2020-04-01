@@ -71,6 +71,9 @@ export default class Ball {
     this._hospitalised = value;
   }
 
+  get notMoving() {
+    return this._notMoving;
+  }
   set notMoving(value) {
     Matter.Body.setVelocity(this.body, {
       x: value
@@ -137,7 +140,7 @@ export default class Ball {
     this.notMoving = true;
   }
 
-  tick() {
+  tick(i) {
     if (this.state !== STATES.healthy) {
       this._tick++;
     }
@@ -177,6 +180,12 @@ export default class Ball {
             ? STATES.dead
             : STATES.recovered;
         this.hospitalised = false;
+      }
+    }
+
+    if (this._config.quarantineNotMove) {
+      if (this.notMoving && i > this._config.quarantineCycMove) {
+        this.notMoving = false;
       }
     }
   }

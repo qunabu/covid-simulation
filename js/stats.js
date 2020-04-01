@@ -19,6 +19,7 @@ export class Stats {
     this.canvas.setAttribute("width", width);
     this.canvas.setAttribute("height", this._config.chartHeight);
     this.context = this.canvas.getContext("2d");
+    this.context.font = "10px Arial";
 
     this._keys = ["healthy", "infected", "recovered", "dead", "sick"];
 
@@ -142,6 +143,7 @@ export class Stats {
           document.getElementById(`value-${key}`).innerText = lastRecord[key];
         }
       });
+      document.getElementById("cycle-n").innerText = lastRecord.n;
     }
 
     const chartHeight = this._config.chartHeight;

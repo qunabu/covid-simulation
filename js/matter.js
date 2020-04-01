@@ -214,7 +214,7 @@ export const main = (
   const tick = i => {
     balls.forEach(ball => ball.tick(i));
     config.quarantineWallOpen &&
-      i > 100 &&
+      i > config.quarantineCycWallOpen &&
       qWalls.forEach(qWall => Matter.Body.scale(qWall, 1, 0.998));
     pushSeries(i);
     Hospitalization.update(avg.hospitalized / balls.length);

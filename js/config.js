@@ -113,6 +113,8 @@ export const defaultConfig = {
     quarantineWalls: "number of walls",
     quarantineNotMove: "Percentage of balls that are not moving",
     quarantineWallOpen: "Does wall do open after some time",
+    quarantineCycWallOpen: "Cycles after walls starts to open",
+    quarantineCycMove: "Cycles after ball start moving again",
     hospLvl: "Maximal level of hospitalisation for population",
     noHospMultiply:
       "Multiplier of fatal sicknens of sicks person that doesn't get hospitalisation",
@@ -133,7 +135,9 @@ export const defaultConfig = {
   },
   quarantineWalls: 1,
   quarantineWallOpen: true,
-  quarantineNotMove: 0.2
+  quarantineCycWallOpen: 200,
+  quarantineNotMove: 0.2,
+  quarantineCycMove: 200
 };
 
 //extend gui
@@ -335,6 +339,14 @@ export const ConfigGui = (config, onSubmit) => {
   f5.add(config, "quarantineNotMove", 0, 1)
     .step(0.001)
     .title(config.descriptions.quarantineNotMove);
+
+  f5.add(config, "quarantineCycWallOpen", 0, 1000)
+    .step(5)
+    .title(config.descriptions.quarantineCycWallOpen);
+
+  f5.add(config, "quarantineCycMove", 0, 1000)
+    .step(5)
+    .title(config.descriptions.quarantineCycMove);
 
   const f6 = gui.addFolder("Hospitalisation");
   f6.add(config, "hospLvl", 0, 1)
