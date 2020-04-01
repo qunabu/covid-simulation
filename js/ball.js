@@ -171,7 +171,9 @@ export default class Ball {
         Math.random() > 0.8
       ) {
         this.state =
-          Math.random() < this._probFatality * (this.hospitalised ? 1 : 2)
+          Math.random() <
+          this._probFatality *
+            (this.hospitalised ? 1 : this._config.noHospMultiply)
             ? STATES.dead
             : STATES.recovered;
         this.hospitalised = false;

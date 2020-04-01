@@ -64,6 +64,7 @@ export const defaultConfig = {
   hospiAge69: 0.274,
   hospiAge79: 0.432,
   hospiAge100: 0.709,
+  noHospMultiply: 2,
   colors: {
     healthy: "#AAC6CA",
     infected: "#FFBA49",
@@ -113,6 +114,8 @@ export const defaultConfig = {
     quarantineNotMove: "Percentage of balls that are not moving",
     quarantineWallOpen: "Does wall do open after some time",
     hospLvl: "Maximal level of hospitalisation for population",
+    noHospMultiply:
+      "Multiplier of fatal sicknens of sicks person that doesn't get hospitalisation",
     hospiAge9: "Age 0-9 % requiring critial hospitalisation",
     hospiAge19: "Age 10-19 % requiring critial hospitalisation",
     hospiAge29: "Age 20-29 % requiring critial hospitalisation",
@@ -136,7 +139,7 @@ export const defaultConfig = {
 //extend gui
 
 for (const contoller in dat.controllers) {
-  dat.controllers[contoller].prototype.title = function (title) {
+  dat.controllers[contoller].prototype.title = function(title) {
     const titleNode = document.createElement("div");
     titleNode.classList.add("tooltip");
     titleNode.innerText = title;
@@ -174,34 +177,51 @@ export const ConfigGui = (config, onSubmit) => {
 
   const f2 = gui.addFolder("Age Distribution");
   f2.add(config, "distrAge9", min, max, 0.01)
-    .title(config.descriptions.distrAge9).listen().onFinishChange((val) => onSetDistrAgesValues(0, val));
+    .title(config.descriptions.distrAge9)
+    .listen()
+    .onFinishChange(val => onSetDistrAgesValues(0, val));
 
   f2.add(config, "distrAge19", min, max, 0.01)
-    .title(config.descriptions.distrAge19).listen().onFinishChange((val) => onSetDistrAgesValues(1, val));
+    .title(config.descriptions.distrAge19)
+    .listen()
+    .onFinishChange(val => onSetDistrAgesValues(1, val));
 
   f2.add(config, "distrAge29", min, max, 0.01)
-    .title(config.descriptions.distrAge29).listen().onFinishChange((val) => onSetDistrAgesValues(2, val));
+    .title(config.descriptions.distrAge29)
+    .listen()
+    .onFinishChange(val => onSetDistrAgesValues(2, val));
 
   f2.add(config, "distrAge39", min, max, 0.01)
-    .title(config.descriptions.distrAge39).listen().onFinishChange((val) => onSetDistrAgesValues(3, val));
+    .title(config.descriptions.distrAge39)
+    .listen()
+    .onFinishChange(val => onSetDistrAgesValues(3, val));
 
   f2.add(config, "distrAge49", min, max, 0.01)
-    .title(config.descriptions.distrAge49).listen().onFinishChange((val) => onSetDistrAgesValues(4, val));
+    .title(config.descriptions.distrAge49)
+    .listen()
+    .onFinishChange(val => onSetDistrAgesValues(4, val));
 
   f2.add(config, "distrAge59", min, max, 0.01)
-    .title(config.descriptions.distrAge59).listen().onFinishChange((val) => onSetDistrAgesValues(5, val));
+    .title(config.descriptions.distrAge59)
+    .listen()
+    .onFinishChange(val => onSetDistrAgesValues(5, val));
 
   f2.add(config, "distrAge69", min, max, 0.01)
-    .title(config.descriptions.distrAge69).listen().onFinishChange((val) => onSetDistrAgesValues(6, val));
+    .title(config.descriptions.distrAge69)
+    .listen()
+    .onFinishChange(val => onSetDistrAgesValues(6, val));
 
   f2.add(config, "distrAge79", min, max, 0.01)
-    .title(config.descriptions.distrAge79).listen().onFinishChange((val) => onSetDistrAgesValues(7, val));
+    .title(config.descriptions.distrAge79)
+    .listen()
+    .onFinishChange(val => onSetDistrAgesValues(7, val));
 
   f2.add(config, "distrAge100", min, max, 0.01)
-    .title(config.descriptions.distrAge100).listen().onFinishChange((val) => onSetDistrAgesValues(8, val));
+    .title(config.descriptions.distrAge100)
+    .listen()
+    .onFinishChange(val => onSetDistrAgesValues(8, val));
 
-
-  const getSum = (index) => {
+  const getSum = index => {
     let sum = 0;
     f2.__controllers.forEach((e, row) => {
       if (index !== row) {
@@ -209,45 +229,43 @@ export const ConfigGui = (config, onSubmit) => {
       }
     });
     return sum;
-  }
-
+  };
 
   const onSetDistrAgesValues = (index, value) => {
     if (getSum(index) + value > 1) {
       const elements = Object.keys(AGES);
-      let allElements = elements.length - 1
-      let overplus = (getSum(index) + value) - 1;
+      let allElements = elements.length - 1;
+      let overplus = getSum(index) + value - 1;
       let valueForEachElement = overplus / allElements;
 
       f2.__controllers.forEach((e, row) => {
         const currentItemValue = f2.__controllers[row].object[elements[row]];
         if (index !== row) {
           if (currentItemValue - valueForEachElement < 0) {
-            valueForEachElement += ((valueForEachElement - currentItemValue) / (allElements - 1));
+            valueForEachElement +=
+              (valueForEachElement - currentItemValue) / (allElements - 1);
             allElements--;
-            e.setValue(0)
-          }
-          else if (currentItemValue - valueForEachElement > 0) {
-            e.setValue(currentItemValue - valueForEachElement)
+            e.setValue(0);
+          } else if (currentItemValue - valueForEachElement > 0) {
+            e.setValue(currentItemValue - valueForEachElement);
           }
         }
       });
-    }
-
-    else if (getSum(index) + value < 1) {
+    } else if (getSum(index) + value < 1) {
       const elements = Object.keys(AGES);
       let allElements = elements.length - 1;
       let overplus = 1 - (getSum(index) + value);
       let valueForEachElement = overplus / allElements;
 
       f2.__controllers.forEach((e, row) => {
-        let currentItemValue = f2.__controllers[row].object[Object.keys(AGES)[row]];
+        let currentItemValue =
+          f2.__controllers[row].object[Object.keys(AGES)[row]];
         if (index !== row) {
-          e.setValue(currentItemValue + valueForEachElement)
+          e.setValue(currentItemValue + valueForEachElement);
         }
-      })
+      });
     }
-  }
+  };
 
   const f3 = gui.addFolder("Fatality Ratio");
   f3.add(config, "fatalAge9", 0, 1)
@@ -323,6 +341,10 @@ export const ConfigGui = (config, onSubmit) => {
     .step(0.01)
     .title(config.descriptions.hospLvl);
 
+  f6.add(config, "noHospMultiply", 1, 4)
+    .step(0.1)
+    .title(config.descriptions.noHospMultiply);
+
   f6.add(config, "hospiAge9", 0, 1)
     .step(0.001)
     .title(config.descriptions.hospiAge9);
@@ -357,7 +379,7 @@ export const ConfigGui = (config, onSubmit) => {
 
   //colors dots
   Object.keys(config.colors).forEach(color => {
-    document.getElementById(`dot-${ color }`).style.backgroundColor =
+    document.getElementById(`dot-${color}`).style.backgroundColor =
       config.colors[color];
   });
 
